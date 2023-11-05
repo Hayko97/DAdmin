@@ -1,0 +1,56 @@
+@code {
+    private string filterText = string.Empty;
+    private IEnumerable<KeyValuePair<string, string>> filteredItems;
+    private bool isDropdownOpen = false;
+
+    [Parameter] public IEnumerable<KeyValuePair<string, string>> Items { get; set; } = new List<KeyValuePair<string, string>>();
+    [Parameter] public string SelectedValue { get; set; }
+    [Parameter] public EventCallback<string> SelectedValueChanged { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        filterText = string.IsNullOrEmpty(filterText) ? Items.FirstOrDefault(x => x.Key == SelectedValue).Value : filterText;
+        filteredItems = Items;
+    }
+
+    private void FilterItems()
+    {
+        filteredItems = string.IsNullOrEmpty(filterText)
+            ? Items
+            : Items.Where(i => i.Value.Contains(filterText, StringComparison.OrdinalIgnoreCase)).ToList();
+    }
+
+    private void SelectItem(KeyValuePair<string, string> item)
+    {
+        SelectedValue = item.Key;
+        SelectedValueChanged.InvokeAsync(item.Key);
+        filterText = item.Value; 
+        CloseDropdown();
+    }
+
+    private Task ToggleDropdown()
+    {
+        isDropdownOpen = !isDropdownOpen;
+        return Task.CompletedTask;
+    }
+
+    private Task CloseDropdown()
+    {
+        isDropdownOpen = false;
+        return Task.CompletedTask;
+    }
+}
+
+<div class="searchable-dropdown position-relative" tabindex="0" @onblur="CloseDropdown" @onfocusout="CloseDropdown">
+    <input type="text" class="form-control" @bind="filterText" @bind:event="oninput" @onkeyup="FilterItems" placeholder="Search..." @onclick="ToggleDropdown" />
+    
+    @if (isDropdownOpen)
+    {
+        <div class="dropdown-menu show w-100">
+            @foreach (var item in filteredItems)
+            {
+                <a class="dropdown-item" @onclick="() => SelectItem(item)">@item.Value</a>
+            }
+        </div>
+    }
+</div>

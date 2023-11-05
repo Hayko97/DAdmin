@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "dgSpecHash": "GipuKbh3NiEYQ443uJkNp9wSZu6/GaEO76wA/xxuspfB0gTgbXq44gH+X84djMznnMUkcBacn7Lut8S7GohXcg==",
+  "success": true,
+  "projectFilePath": "/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/DynamicAdmin.Components.csproj",
+  "expectedPackageFiles": [
+    "/Users/ashugh/.nuget/packages/microsoft.aspnetcore.authorization/6.0.14/microsoft.aspnetcore.authorization.6.0.14.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/microsoft.aspnetcore.components/6.0.14/microsoft.aspnetcore.components.6.0.14.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/microsoft.aspnetcore.components.analyzers/6.0.14/microsoft.aspnetcore.components.analyzers.6.0.14.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/microsoft.aspnetcore.components.forms/6.0.14/microsoft.aspnetcore.components.forms.6.0.14.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/microsoft.aspnetcore.components.web/6.0.14/microsoft.aspnetcore.components.web.6.0.14.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/microsoft.aspnetcore.metadata/6.0.14/microsoft.aspnetcore.metadata.6.0.14.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/microsoft.entityframeworkcore/7.0.13/microsoft.entityframeworkcore.7.0.13.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/microsoft.entityframeworkcore.abstractions/7.0.13/microsoft.entityframeworkcore.abstractions.7.0.13.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/microsoft.entityframeworkcore.analyzers/7.0.13/microsoft.entityframeworkcore.analyzers.7.0.13.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/microsoft.extensions.caching.abstractions/7.0.0/microsoft.extensions.caching.abstractions.7.0.0.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/microsoft.extensions.caching.memory/7.0.0/microsoft.extensions.caching.memory.7.0.0.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/microsoft.extensions.dependencyinjection/7.0.0/microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/7.0.0/microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/microsoft.extensions.logging/7.0.0/microsoft.extensions.logging.7.0.0.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/microsoft.extensions.logging.abstractions/7.0.0/microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/microsoft.extensions.options/7.0.0/microsoft.extensions.options.7.0.0.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/microsoft.extensions.primitives/7.0.0/microsoft.extensions.primitives.7.0.0.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/microsoft.jsinterop/6.0.14/microsoft.jsinterop.6.0.14.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/system.io.pipelines/6.0.3/system.io.pipelines.6.0.3.nupkg.sha512",
+    "/Users/ashugh/.nuget/packages/system.runtime.compilerservices.unsafe/6.0.0/system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

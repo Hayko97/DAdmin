@@ -1,0 +1,32 @@
+<nav id="sidebar">
+    <div class="p-4">
+
+        <h5 class="text-white">Dashboard <i class="fa fa-dashboard"></i></h5>
+        <ul class="list-unstyled components mb-5">
+            <li>
+                <a href="#">Charts</a>
+            </li>
+        </ul>
+        
+        <h5 class="text-white">Tables <i class="fa fa-table"></i></h5>
+        <ul class="list-unstyled components mb-5">
+            @if (tableNames == null)
+            {
+                <p class="text-white">Loading...</p>
+            }
+            else
+            {
+                foreach (var tableName in tableNames)
+                {
+                    var isSelected = tableName == selectedTableName;
+                    <li class="@(isSelected ? "active" : "")">
+                        <a href="#"
+                           @onclick="() => SelectTable(tableName)">
+                            @tableName
+                        </a>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+</nav>

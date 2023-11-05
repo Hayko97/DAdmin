@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>DynamicAdmin.Components</id>
+    <version>1.0.0</version>
+    <authors>DynamicAdmin.Components</authors>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework="net6.0">
+        <dependency id="Microsoft.AspNetCore.Components.Web" version="6.0.14" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore" version="7.0.13" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/bin/Debug/net6.0/DynamicAdmin.Components.dll" target="lib/net6.0/DynamicAdmin.Components.dll" />
+    <file src="/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/obj/Debug/net6.0/staticwebassets/msbuild.DynamicAdmin.Components.Microsoft.AspNetCore.StaticWebAssets.props" target="build/Microsoft.AspNetCore.StaticWebAssets.props" />
+    <file src="/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/obj/Debug/net6.0/staticwebassets/msbuild.build.DynamicAdmin.Components.props" target="build/DynamicAdmin.Components.props" />
+    <file src="/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.DynamicAdmin.Components.props" target="buildMultiTargeting/DynamicAdmin.Components.props" />
+    <file src="/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.DynamicAdmin.Components.props" target="buildTransitive/DynamicAdmin.Components.props" />
+    <file src="/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/wwwroot/admin.css" target="staticwebassets/admin.css" />
+    <file src="/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/wwwroot/background.png" target="staticwebassets/background.png" />
+    <file src="/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/wwwroot/exampleJsInterop.js" target="staticwebassets/exampleJsInterop.js" />
+  </files>
+</package>

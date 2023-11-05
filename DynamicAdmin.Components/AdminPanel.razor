@@ -1,0 +1,12 @@
+<div class="wrapper d-flex align-items-stretch">
+
+    <Menu OnSelectedItem="OnSelectedItem"/>
+
+    <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5 pt-5">
+        @if (!string.IsNullOrEmpty(_selectedMenuItem))
+        {
+            @_tableDataComponent
+        }
+    </div>
+</div>
