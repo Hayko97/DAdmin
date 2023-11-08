@@ -1,18 +1,18 @@
-<nav id="sidebar">
-    <div class="p-4">
+<nav class="sidebar">
+    <div class="pt-4">
 
-        <h5 class="text-white">Dashboard <i class="fa fa-dashboard"></i></h5>
-        <ul class="list-unstyled components mb-5">
+        <a class="sidebar-item text-white"><i class="fa fa-dashboard mr-1"></i> Dashboard </a>
+        <ul class="list-unstyled components mb-2">
             <li>
                 <a href="#">Charts</a>
             </li>
         </ul>
-        
-        <h5 class="text-white">Tables <i class="fa fa-table"></i></h5>
+
+        <a class="sidebar-item text-white"><i class="fa fa-table mr-1"></i> Tables </a>
         <ul class="list-unstyled components mb-5">
             @if (tableNames == null)
             {
-                <p class="text-white">Loading...</p>
+                <p class="text-dark">Loading...</p>
             }
             else
             {

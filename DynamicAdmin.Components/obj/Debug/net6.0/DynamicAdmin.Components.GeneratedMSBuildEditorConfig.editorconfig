@@ -11,7 +11,7 @@ build_property.RootNamespace = DynamicAdmin.Components
 build_property.ProjectDir = /Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
-build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = true
 build_property.MSBuildProjectDirectory = /Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components
 build_property._RazorSourceGeneratorDebug = 
 
@@ -27,8 +27,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Nb2RhbERpYWxvZ3MvQ3JlYXRlRW50aXR5RGlhbG9nLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/Components/ModalDialogs/EditEntity.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Nb2RhbERpYWxvZ3MvRWRpdEVudGl0eS5yYXpvcg==
+[/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/Components/ModalDialogs/EditEntityDialog.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Nb2RhbERpYWxvZ3MvRWRpdEVudGl0eURpYWxvZy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/Components/Shared/SearchableSelect.razor]
@@ -37,6 +37,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/Components/TableData.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9UYWJsZURhdGEucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/Pages/CreateEntity.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvQ3JlYXRlRW50aXR5LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/_Imports.razor]

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DynamicAdmin.Components;
 
+//TODO for generic contexts
 public partial class AdminPanel
 {
     private List<string> _tableNames;
@@ -29,7 +30,7 @@ public partial class AdminPanel
             _tableDataComponent = builder =>
             {
                 builder.OpenComponent(0, typeof(TableData<>).MakeGenericType(entityType));
-                builder.AddAttribute(1, "TableName", tableName);
+                builder.AddAttribute(1, "EntityName", tableName);
                 builder.CloseComponent();
             };
 

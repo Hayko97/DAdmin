@@ -1,69 +1,72 @@
 using DynamicAdmin.Components.Helpers;
-using DynamicAdmin.Components.Models;
 using DynamicAdmin.Components.Services;
+using DynamicAdmin.Components.Services.Interfaces;
+using DynamicAdmin.Components.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
 namespace DynamicAdmin.Components.Components.ModalDialogs;
 
-public partial class EditEntityDialog<TEntity>
+public partial class EditEntityDialog<TEntity> where TEntity : class
 {
     [Parameter] public bool IsOpen { get; set; }
     [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
-    [Parameter] public TEntity SelectedEntity { get; set; }
-    [Parameter] public string TableName { get; set; }
+    [Parameter] public EntityViewModel<TEntity> SelectedEntity { get; set; }
+    [Parameter] public string EntityName { get; set; }
     [Parameter] public EventCallback<TEntity> OnSave { get; set; }
     [Parameter] public EventCallback OnCloseModal { get; set; }
 
     [Inject] private IDataService<TEntity> DataService { get; set; }
     [Inject] private IJSRuntime JSRuntime { get; set; }
 
-    private EntityViewModel<TEntity> _selectedEntity;
     private Dictionary<string, object> _inputValues = new();
     private Dictionary<string, string> _inputStringValues = new();
 
-    protected override async Task OnParametersSetAsync()
+    protected override Task OnParametersSetAsync()
     {
-        _selectedEntity = await DataService.GetEntityViewModel(SelectedEntity);
-
         _inputValues.Clear();
         _inputStringValues.Clear();
 
-        foreach (var prop in _selectedEntity.Properties)
+        if (SelectedEntity != null)
         {
-            if (!_inputValues.ContainsKey(prop.Name))
+            foreach (var prop in SelectedEntity.Properties)
             {
-                _inputValues[prop.Name] = prop.Value;
-            }
+                if (!_inputValues.ContainsKey(prop.Name))
+                {
+                    _inputValues[prop.Name] = prop.Value;
+                }
 
-            if (!_inputStringValues.ContainsKey(prop.Name))
-            {
-                _inputStringValues[prop.Name] = _inputValues[prop.Name]?.ToString();
+                if (!_inputStringValues.ContainsKey(prop.Name))
+                {
+                    _inputStringValues[prop.Name] = _inputValues[prop.Name]?.ToString();
+                }
             }
         }
+
+        return Task.CompletedTask;
     }
 
     private async Task UpdateEntity()
     {
         try
         {
-            if (_selectedEntity == null)
+            if (SelectedEntity == null)
             {
                 await JSRuntime.InvokeVoidAsync("alert", "No item selected for editing.");
                 return;
             }
 
-            foreach (var prop in _selectedEntity.GetPropertiesWithoutRelations())
+            foreach (var prop in SelectedEntity.GetPropertiesWithoutRelations())
             {
                 if (_inputStringValues.ContainsKey(prop.Name))
                 {
                     ClassHelper.SetStringValue(_inputStringValues[prop.Name], prop.TablePropertyInfo,
-                        _selectedEntity.Entity);
+                        SelectedEntity.Entity);
                 }
             }
 
-            await DataService.UpdateAsync(TableName, _selectedEntity.Entity);
-            await OnSave.InvokeAsync(_selectedEntity.Entity);
+            await DataService.UpdateAsync(EntityName, SelectedEntity.Entity);
+            await OnSave.InvokeAsync(SelectedEntity.Entity);
             await IsOpenChanged.InvokeAsync(false);
         }
         catch (Exception ex)

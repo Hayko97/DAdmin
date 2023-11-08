@@ -1,3 +1,4 @@
+using DynamicAdmin.Components.Services.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,17 +7,15 @@ namespace DynamicAdmin.Components.Components;
 public partial class Menu
 {
     private string selectedTableName;
-    private List<string> tableNames;
-    [Inject] public DbContext DbContext { get; set; }
+    private IEnumerable<string> tableNames;
+    [Inject] public IDbInfoService DbInfoService { get; set; }
     [Parameter] public EventCallback<string> OnSelectedItem { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
-        if (DbContext == null) throw new InvalidOperationException("DbContext is required");
+        tableNames = DbInfoService.GetEntityNames();
 
-        tableNames = DbContext.Model.GetEntityTypes()
-            .Select(type => type.ClrType.Name)
-            .ToList();
+        return Task.CompletedTask;
     }
 
     private async Task SelectTable(string tableName)

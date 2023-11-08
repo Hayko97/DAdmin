@@ -3,24 +3,26 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
 using DynamicAdmin.Components.Helpers;
-using DynamicAdmin.Components.Models;
+using DynamicAdmin.Components.Services.Interfaces;
+using DynamicAdmin.Components.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualBasic;
 
 namespace DynamicAdmin.Components.Services;
 
-public class DataService<TEntity> : IDataService<TEntity>, IDisposable where TEntity : class
+public class DataService<TEntity> : DbService, IDataService<TEntity> where TEntity : class
 {
     private const int PageSize = 10;
-    private DbContext _dbContext;
-
-    public DataService(DbContext dbContext)
+    
+    public DataService(IServiceProvider serviceProvider) : base(serviceProvider)
     {
-        _dbContext = dbContext;
     }
 
-    public async Task<PaginatedResponse<TEntity>> GetPaginatedAsync(string tableName, int page, string searchTerm = null)
+    public async Task<PaginatedResponse<TEntity>> GetPaginatedAsync(string tableName, int page,
+        string searchTerm = null)
     {
-        var entityType = _dbContext.Model.GetEntityTypes()
+        // 
+        var entityType = DbContext.Model.GetEntityTypes()
             .FirstOrDefault(e => e.ClrType.Name.Equals(tableName, StringComparison.OrdinalIgnoreCase));
 
         if (entityType == null) return null;
@@ -32,14 +34,14 @@ public class DataService<TEntity> : IDataService<TEntity>, IDisposable where TEn
                 null)
             .MakeGenericMethod(entityType.ClrType);
 
-        var dbSet = method.Invoke(_dbContext, null) as IQueryable<TEntity>;
+        var dbSet = method.Invoke(DbContext, null) as IQueryable<TEntity>;
 
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
             var predicate = GetSearchPredicate(searchTerm);
             dbSet = dbSet.Where(predicate);
         }
-        
+
         int skipAmount = (page - 1) * PageSize;
         var data = await dbSet.Skip(skipAmount).Take(PageSize).ToListAsync();
 
@@ -53,7 +55,7 @@ public class DataService<TEntity> : IDataService<TEntity>, IDisposable where TEn
                         TablePropertyInfo = prop,
                         Name = prop.Name,
                         Value = prop.GetValue(item),
-                        IsNavigationProperty = _dbContext.IsNavigationProperty(item.GetType(), prop),
+                        IsNavigationProperty = DbContext.IsNavigationProperty(item.GetType(), prop),
                     }
                 ).ToList()
             }
@@ -68,7 +70,6 @@ public class DataService<TEntity> : IDataService<TEntity>, IDisposable where TEn
             TotalPages = totalPages
         };
     }
-    
     private Expression<Func<TEntity, bool>> GetSearchPredicate(string searchTerm)
     {
         var properties = typeof(TEntity).GetProperties()
@@ -81,8 +82,8 @@ public class DataService<TEntity> : IDataService<TEntity>, IDisposable where TEn
         {
             var propAccess = Expression.PropertyOrField(parameter, prop.Name);
             var condition = Expression.Call(
-                propAccess, 
-                typeof(string).GetMethod("Contains", new[] { typeof(string) }), 
+                propAccess,
+                typeof(string).GetMethod("Contains", new[] { typeof(string) }),
                 Expression.Constant(searchTerm, typeof(string))
             );
             body = Expression.OrElse(body, condition);
@@ -91,50 +92,9 @@ public class DataService<TEntity> : IDataService<TEntity>, IDisposable where TEn
         return Expression.Lambda<Func<TEntity, bool>>(body, parameter);
     }
 
-    public async Task<EntityViewModel<TEntity>> GetEntityViewModel(TEntity entity)
-    {
-        var model = new EntityViewModel<TEntity>
-        {
-            Entity = entity
-        };
-        var properties = entity.GetType().GetProperties();
-        // ReSharper disable once ComplexConditionExpression
-        model.Properties = properties.Select(prop =>
-        {
-            bool isNavigation = _dbContext.IsNavigationProperty(entity.GetType(), prop);
-            var relatedEntities = isNavigation
-                ? _dbContext.GetRelatedEntitiesFor(prop).Select(re => new KeyValuePair<string, string>(
-                    DbContextHelper.GetPropertyValue(re, "Id").ToString(),
-                    string.Join(", ", re.GetType().GetProperties().Skip(1).Take(3).Select(s => s.Name))
-                )).ToList()
-                : null;
-            var foreignKeyProperty = _dbContext.GetForeignKeyForNavigationProperty(entity.GetType(), prop);
-
-            var entityProperty = new EntityProperty
-            {
-                TablePropertyInfo = prop,
-                Name = prop.Name,
-                Value = prop.GetValue(entity),
-                IsNavigationProperty = isNavigation,
-                RelatedEntities = relatedEntities,
-                IsForeignKey = _dbContext.IsForeignKey(entity.GetType(), prop),
-            };
-
-            if (foreignKeyProperty != null && properties.Any(x => x.Name == foreignKeyProperty.Name))
-            {
-                entityProperty.ForeignKeyProperty = foreignKeyProperty;
-            }
-
-            return entityProperty;
-        }).ToList();
-
-        return model;
-    }
-
-
     public async Task<TEntity> CreateAsync(string tableName, TEntity entity)
     {
-        var entityType = _dbContext.Model.GetEntityTypes()
+        var entityType = DbContext.Model.GetEntityTypes()
             .FirstOrDefault(e => e.ClrType.Name.Equals(tableName, StringComparison.OrdinalIgnoreCase));
 
         if (entityType == null) return default;
@@ -143,7 +103,7 @@ public class DataService<TEntity> : IDataService<TEntity>, IDisposable where TEn
                 BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null)
             .MakeGenericMethod(entityType.ClrType);
 
-        var dbSet = method.Invoke(_dbContext, null) as DbSet<TEntity>;
+        var dbSet = method.Invoke(DbContext, null) as DbSet<TEntity>;
 
         var idProperty = entityType.ClrType.GetProperty("Id");
         if (idProperty != null && entity != null)
@@ -156,7 +116,7 @@ public class DataService<TEntity> : IDataService<TEntity>, IDisposable where TEn
         }
 
         var result = await dbSet.AddAsync(entity);
-        await _dbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync();
 
         return result.Entity;
     }
@@ -165,8 +125,8 @@ public class DataService<TEntity> : IDataService<TEntity>, IDisposable where TEn
     {
         try
         {
-            _dbContext.Entry(entity).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
+            DbContext.Entry(entity).State = EntityState.Modified;
+            await DbContext.SaveChangesAsync();
             return entity;
         }
         catch (Exception ex)
@@ -181,8 +141,8 @@ public class DataService<TEntity> : IDataService<TEntity>, IDisposable where TEn
     {
         try
         {
-            _dbContext.Remove(entity);
-            await _dbContext.SaveChangesAsync();
+            DbContext.Remove(entity);
+            await DbContext.SaveChangesAsync();
         }
         catch (DbUpdateException e)
         {
@@ -193,7 +153,7 @@ public class DataService<TEntity> : IDataService<TEntity>, IDisposable where TEn
     public async Task DeleteWithReferencesAsync(string tableName, TEntity entity)
     {
         // 1. Identify and load referencing records
-        var references = _dbContext.Model.FindEntityType(typeof(TEntity))
+        var references = DbContext.Model.FindEntityType(typeof(TEntity))
             .GetReferencingForeignKeys();
 
         foreach (var fk in references)
@@ -202,7 +162,7 @@ public class DataService<TEntity> : IDataService<TEntity>, IDisposable where TEn
             var setMethod = typeof(DbContext)
                 .GetMethod(nameof(DbContext.Set), BindingFlags.Public | BindingFlags.Instance)
                 .MakeGenericMethod(relatedEntityType);
-            var set = setMethod.Invoke(_dbContext, null);
+            var set = setMethod.Invoke(DbContext, null);
 
             var foreignKeyPropertyName = fk.Properties.First().Name;
             var keyValue = entity.GetType().GetProperty("Id").GetValue(entity);
@@ -213,14 +173,14 @@ public class DataService<TEntity> : IDataService<TEntity>, IDisposable where TEn
             var lambda = CreateEqualsExpression(relatedEntityType, foreignKeyPropertyName, keyValue);
             var recordsToDelete = whereMethod.Invoke(null, new object[] { set, lambda }) as IQueryable;
 
-            _dbContext.RemoveRange(recordsToDelete);
+            DbContext.RemoveRange(recordsToDelete);
         }
 
         // 2. Delete the main record
-        _dbContext.Remove(entity);
+        DbContext.Remove(entity);
 
         // 3. Save the changes
-        await _dbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync();
     }
 
     private static LambdaExpression CreateEqualsExpression(Type entityType, string propertyName, object value)
@@ -230,10 +190,5 @@ public class DataService<TEntity> : IDataService<TEntity>, IDisposable where TEn
         var constValue = Expression.Constant(value);
         var equals = Expression.Equal(prop, constValue);
         return Expression.Lambda(equals, param);
-    }
-
-    public void Dispose()
-    {
-        _dbContext.Dispose();
     }
 }

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "dR12c1U8AmjqFtB2lpxixjgdLmgFbDY5qrSQGIDXv0w=",
+  "Hash": "tMP4jghVBKO7sXgaVnV2kj6+8/XmMxBlp/2zIPkvIOc=",
   "Source": "DAdmin",
   "BasePath": "_content/DAdmin",
   "Mode": "Default",
@@ -291,23 +291,6 @@
       "OriginalItemSpec": "wwwroot/favicon.ico"
     },
     {
-      "Identity": "/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/wwwroot/admin.css",
-      "SourceId": "DynamicAdmin.Components",
-      "SourceType": "Project",
-      "ContentRoot": "/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/wwwroot/",
-      "BasePath": "_content/DynamicAdmin.Components",
-      "RelativePath": "admin.css",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot/admin.css"
-    },
-    {
       "Identity": "/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/wwwroot/background.png",
       "SourceId": "DynamicAdmin.Components",
       "SourceType": "Project",
@@ -325,12 +308,12 @@
       "OriginalItemSpec": "wwwroot/background.png"
     },
     {
-      "Identity": "/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/wwwroot/css/select.css",
+      "Identity": "/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/wwwroot/css/admin.css",
       "SourceId": "DynamicAdmin.Components",
       "SourceType": "Project",
       "ContentRoot": "/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/wwwroot/",
       "BasePath": "_content/DynamicAdmin.Components",
-      "RelativePath": "css/select.css",
+      "RelativePath": "css/admin.css",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -339,7 +322,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot/css/select.css"
+      "OriginalItemSpec": "wwwroot/css/admin.css"
     },
     {
       "Identity": "/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/wwwroot/exampleJsInterop.js",
@@ -36346,6 +36329,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/npm-modules/package.json"
+    },
+    {
+      "Identity": "/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/wwwroot/style.css",
+      "SourceId": "DynamicAdmin.Components",
+      "SourceType": "Project",
+      "ContentRoot": "/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/wwwroot/",
+      "BasePath": "_content/DynamicAdmin.Components",
+      "RelativePath": "style.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/style.css"
     },
     {
       "Identity": "/Users/ashugh/RiderProjects/DynamicAdmin/DynamicAdmin.Components/wwwroot/vendor/@popperjs/core/dist/cjs/enums.js",

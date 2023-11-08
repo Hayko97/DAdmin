@@ -3,7 +3,7 @@
 @using DynamicAdmin.Components.Helpers
 @typeparam TEntity
 
-<h2>@TableName</h2>
+<h3>@EntityName</h3>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <button class="btn btn-primary" @onclick="OpenCreateModal"><i class="fa fa-file-text-o"></i>Create </button>
@@ -17,7 +17,7 @@
 
 @if (_data != null && _data.Any())
 {
-    <table class="table table-striped table-hover mt-5">
+    <table class="table mt-5">
         <thead>
         <tr>
             @foreach (var prop in _data.FirstOrDefault().GetPropertiesWithoutRelations().Take(10))
@@ -52,87 +52,27 @@
     </table>
 
     <!-- Render pagination controls -->
-    <div class="pagination-controls">
-        <ul class="pagination">
-            <li class="page-item @(IsFirstPage ? "disabled" : "")">
-                <button class="page-link" @onclick="PreviousPage" disabled="@IsFirstPage">Previous</button>
-            </li>
-
+    <div class="pagination">
+        <a class="pagination-newer" href="#" @onclick="PreviousPage">PREV</a>
+    
+        <span class="pagination-inner">
             @for (int i = 1; i <= TotalPages; i++)
             {
                 int localI = i; // Capture variable for use in lambda
-                <li class="page-item @(localI == _currentPage ? "active" : "")">
-                    <button class="page-link" @onclick="() => GoToPage(localI)">@localI</button>
-                </li>
+                <a href="#" class="@(localI == _currentPage ? "pagination-active" : "")" @onclick="() => GoToPage(localI)">
+                    @localI
+                </a>
             }
-
-            <li class="page-item @(IsLastPage ? "disabled" : "")">
-                <button class="page-link" @onclick="NextPage" disabled="@IsLastPage">Next</button>
-            </li>
-        </ul>
+        </span>
+    
+        <a class="pagination-older" href="#" @onclick="NextPage">NEXT</a>
     </div>
 
-    @* TODO bring this to seperated component*@
-    @if (_isEditModalOpen && _selectedItem != null)
-    {
-        <div class="modal fade show d-block" tabindex="-1">
-            <div class="modal-dialog modal-fullscreen w-100">
-                <div class="modal-content w-100">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit Data</h5>
-                        <button type="button" class="close" @onclick="CloseModal">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row w-75 m-auto">
-                            @foreach (var prop in _selectedItem.Properties)
-                            {
-                                if (prop.IsForeignKey)
-                                {
-                                    continue;
-                                }
-
-                                @if (prop.IsNavigationProperty)
-                                {
-                                    var foreignKeyProperty = prop.ForeignKeyProperty;
-                                    if (foreignKeyProperty != null)
-                                    {
-                                        if (string.IsNullOrEmpty(_selectedStringValues[foreignKeyProperty.Name]))
-                                        {
-                                            _selectedStringValues[prop.Name] = _selectedStringValues[foreignKeyProperty.Name];
-                                        }
-
-                                        <div class="col-md-4 form-group">
-                                            <label>@prop.Name</label>
-
-                                            <SearchableSelect Items="prop.RelatedEntities" @bind-SelectedValue="_selectedStringValues[foreignKeyProperty.Name]"/>
-                                        </div>
-                                    }
-                                }
-                                else
-                                {
-                                    <div class="col-md-4 form-group">
-                                        <label>@prop.Name</label>
-                                        <input class="form-control" @bind="_selectedStringValues[prop.Name]"/>
-                                    </div>
-                                }
-                            }
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-success" @onclick="EditSelectedItem">Save Changes</button>
-                        <button class="btn btn-secondary" @onclick="CloseModal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-backdrop show"></div>
-    }
+    <EditEntityDialog TEntity="TEntity" EntityName="@EntityName" SelectedEntity="_selectedItem" @bind-IsOpen="_isEditModalOpen" OnSave="OnEditModalSave"/>
 }
 else
 {
-    <h4 class="text-center mt-5">No Data</h4>
+    <h4 class="text-center mt-5 text-black-50">No Data</h4>
 }
 
-<CreateEntityDialog TEntity="TEntity" @bind-IsOpen="_isCreateModalOpen" OnSave="CreateEntity" OnCloseModal="CloseCreateModal"/>
+<CreateEntityDialog TEntity="TEntity" @bind-IsOpen="_isCreateModalOpen" EntityName="@EntityName" OnSave="OnCreateModalSave"/>

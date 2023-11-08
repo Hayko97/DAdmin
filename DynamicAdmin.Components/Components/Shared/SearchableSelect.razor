@@ -5,6 +5,8 @@
 
     [Parameter] public IEnumerable<KeyValuePair<string, string>> Items { get; set; } = new List<KeyValuePair<string, string>>();
     [Parameter] public string SelectedValue { get; set; }
+    [Parameter] public string Class { get; set; }
+    [Parameter] public EventCallback OnClick { get; set; }
     [Parameter] public EventCallback<string> SelectedValueChanged { get; set; }
 
     protected override async Task OnParametersSetAsync()
@@ -41,7 +43,7 @@
     }
 }
 
-<div class="searchable-dropdown position-relative" tabindex="0" @onblur="CloseDropdown" @onfocusout="CloseDropdown">
+<div class="searchable-dropdown position-relative @Class" tabindex="0" @onblur="CloseDropdown" @onfocusout="CloseDropdown" @onclick="OnClick">
     <input type="text" class="form-control" @bind="filterText" @bind:event="oninput" @onkeyup="FilterItems" placeholder="Search..." @onclick="ToggleDropdown" />
     
     @if (isDropdownOpen)

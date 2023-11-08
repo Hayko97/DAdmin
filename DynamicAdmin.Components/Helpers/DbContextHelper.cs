@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DynamicAdmin.Components.Helpers;
 
@@ -67,8 +68,9 @@ public static class DbContextHelper
 
         return false;
     }
-    
-    public static PropertyInfo GetForeignKeyForNavigationProperty(this DbContext dbContext, Type entityType, PropertyInfo navigationProperty)
+
+    public static PropertyInfo GetForeignKeyForNavigationProperty(this DbContext dbContext, Type entityType,
+        PropertyInfo navigationProperty)
     {
         var foreignKey = dbContext.Model.FindEntityType(entityType)
             .FindNavigation(navigationProperty.Name)?.ForeignKey;
@@ -106,4 +108,39 @@ public static class DbContextHelper
     {
         return obj.GetType().GetProperty(propName)?.GetValue(obj);
     }
+
+    public static bool IsValidEntityType(this DbContext dbContext, Type entityType)
+    {
+        var model = dbContext.Model;
+        return model.FindEntityType(entityType) != null;
+    }
+
+    public static string GetTableNameFromProperty(this DbContext dbContext, PropertyInfo propertyInfo)
+    {
+        if (dbContext == null) throw new ArgumentNullException(nameof(dbContext));
+        if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
+
+        var entityType = propertyInfo.DeclaringType;
+        if (entityType == null)
+        {
+            throw new ArgumentException("The property does not have a declaring type.");
+        }
+
+        var efEntityType = dbContext.Model.FindEntityType(entityType);
+        if (efEntityType == null)
+        {
+            throw new ArgumentException("The type is not an entity in the current DbContext.");
+        }
+
+        // Use the IRelationalEntityTypeExtensions.GetEntityName() extension method to retrieve the table name
+        var tableName = efEntityType.ClrType.Name;
+    
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new InvalidOperationException($"The entity type '{entityType.Name}' does not have an associated table.");
+        }
+
+        return tableName;
+    }
+
 }
