@@ -1,7 +1,6 @@
 using DynamicAdmin.Components.Models;
-using Microsoft.EntityFrameworkCore;
 
-namespace DynamicAdmin.Components.Services;
+namespace DynamicAdmin.Components.Services.Interfaces;
 
 public interface IDataService<TEntity>
 {

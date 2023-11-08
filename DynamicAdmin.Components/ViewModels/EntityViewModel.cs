@@ -1,6 +1,6 @@
-namespace DynamicAdmin.Components.Models;
+namespace DynamicAdmin.Components.ViewModels;
 
-public record EntityViewModel<TEntity>
+public record EntityViewModel<TEntity> where TEntity : class
 {
     public TEntity Entity { get; set; }
     public IEnumerable<EntityProperty> Properties { get; set; }

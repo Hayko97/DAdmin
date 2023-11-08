@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace DynamicAdmin.Components.Models;
+namespace DynamicAdmin.Components.ViewModels;
 
 public record EntityProperty
 {
