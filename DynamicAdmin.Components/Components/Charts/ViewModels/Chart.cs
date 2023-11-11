@@ -16,7 +16,7 @@ public class Chart<TEntity> : IChart where TEntity : class
 
     public RenderFragment Render() => builder =>
     {
-        builder.OpenComponent<IntervalChart<TEntity>>(0);
+        builder.OpenComponent<TimeChart<TEntity>>(0);
         builder.AddAttribute(1, "ChartType", ChartType);
         builder.AddAttribute(2, "Name", Name);
         builder.AddAttribute(3, "QueryLogic", QueryLogic);

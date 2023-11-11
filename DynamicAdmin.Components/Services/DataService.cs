@@ -74,6 +74,56 @@ public class DataService<TEntity> : DbService, IDataService<TEntity> where TEnti
         };
     }
 
+    public async Task<PaginatedResponse<TEntity>> GetPaginatedAsync(
+        Func<IQueryable<TEntity>, IQueryable<TEntity>> queryLogic,
+        int page,
+        string searchTerm = null
+    )
+    {
+        IQueryable<TEntity> query = Query();
+
+        // Apply custom query logic if provided
+        if (queryLogic != null)
+        {
+            query = queryLogic(query);
+        }
+
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            var predicate = GetSearchPredicate(searchTerm);
+            query = query.Where(predicate);
+        }
+
+        int skipAmount = (page - 1) * PageSize;
+        var data = await query.Skip(skipAmount).Take(PageSize).ToListAsync();
+
+        var tableEntities = data.Select(item =>
+            new Entity<TEntity>
+            {
+                EntityModel = item,
+                Properties = item.GetType().GetProperties().Select(prop =>
+                    new EntityProperty
+                    {
+                        TablePropertyInfo = prop,
+                        Name = prop.Name,
+                        Value = prop.GetValue(item),
+                        IsNavigationProperty = DbContext.IsNavigationProperty(item.GetType(), prop),
+                    }
+                ).ToList()
+            }
+        ).ToList();
+
+        int totalItems = await query.CountAsync();
+        int totalPages = (totalItems + PageSize - 1) / PageSize;
+
+        return new PaginatedResponse<TEntity>
+        {
+            Data = tableEntities,
+            TotalPages = totalPages
+        };
+    }
+
+
     private Expression<Func<TEntity, bool>> GetSearchPredicate(string searchTerm)
     {
         var properties = typeof(TEntity).GetProperties()

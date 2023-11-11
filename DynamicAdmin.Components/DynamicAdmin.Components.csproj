@@ -20,75 +20,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Components\ModalDialogs\" />
+      <Folder Include="Components\EntityDialog\" />
       <Folder Include="obj\Debug\net6.0\" />
       <Folder Include="wwwroot\npm-modules\" />
       <Folder Include="wwwroot\vendor\" />
-      <Folder Include="wwwroot\vendor\@popperjs\core\dist\cjs\" />
-      <Folder Include="wwwroot\vendor\@popperjs\core\dist\esm\" />
-      <Folder Include="wwwroot\vendor\@popperjs\core\dist\esm\dom-utils\" />
-      <Folder Include="wwwroot\vendor\@popperjs\core\dist\esm\modifiers\" />
-      <Folder Include="wwwroot\vendor\@popperjs\core\dist\esm\utils\" />
-      <Folder Include="wwwroot\vendor\@popperjs\core\dist\umd\" />
-      <Folder Include="wwwroot\vendor\@popperjs\core\lib\" />
-      <Folder Include="wwwroot\vendor\@popperjs\core\lib\dom-utils\" />
-      <Folder Include="wwwroot\vendor\@popperjs\core\lib\modifiers\" />
-      <Folder Include="wwwroot\vendor\@popperjs\core\lib\utils\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\.github\ISSUE_TEMPLATE\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\dist\css\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\dist\js\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\dist\js\i18n\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\docs\custom_theme\ajax\libs\highlight.js\9.15.6\css\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\docs\custom_theme\ajax\libs\highlight.js\9.15.6\js\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\docs\custom_theme\css\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\docs\custom_theme\js\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\docs\docs\css\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\docs\docs\dist\css\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\docs\docs\dist\js\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\docs\docs\dist\js\i18n\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\docs\docs\playground\3\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\js\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\js\i18n\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\less\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\nuget\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\sass\" />
-      <Folder Include="wwwroot\vendor\bootstrap-select\tests\" />
-      <Folder Include="wwwroot\vendor\bootstrap\dist\css\" />
-      <Folder Include="wwwroot\vendor\bootstrap\dist\js\" />
-      <Folder Include="wwwroot\vendor\bootstrap\js\dist\" />
-      <Folder Include="wwwroot\vendor\bootstrap\js\dist\dom\" />
-      <Folder Include="wwwroot\vendor\bootstrap\js\dist\util\" />
-      <Folder Include="wwwroot\vendor\bootstrap\js\src\" />
-      <Folder Include="wwwroot\vendor\bootstrap\js\src\dom\" />
-      <Folder Include="wwwroot\vendor\bootstrap\js\src\util\" />
-      <Folder Include="wwwroot\vendor\bootstrap\scss\" />
-      <Folder Include="wwwroot\vendor\bootstrap\scss\forms\" />
-      <Folder Include="wwwroot\vendor\bootstrap\scss\helpers\" />
-      <Folder Include="wwwroot\vendor\bootstrap\scss\mixins\" />
-      <Folder Include="wwwroot\vendor\bootstrap\scss\utilities\" />
-      <Folder Include="wwwroot\vendor\bootstrap\scss\vendor\" />
-      <Folder Include="wwwroot\vendor\jquery\" />
-      <Folder Include="wwwroot\vendor\jquery\dist\" />
-      <Folder Include="wwwroot\vendor\jquery\src\ajax\" />
-      <Folder Include="wwwroot\vendor\jquery\src\ajax\var\" />
-      <Folder Include="wwwroot\vendor\jquery\src\attributes\" />
-      <Folder Include="wwwroot\vendor\jquery\src\core\" />
-      <Folder Include="wwwroot\vendor\jquery\src\core\var\" />
-      <Folder Include="wwwroot\vendor\jquery\src\css\" />
-      <Folder Include="wwwroot\vendor\jquery\src\data\" />
-      <Folder Include="wwwroot\vendor\jquery\src\data\var\" />
-      <Folder Include="wwwroot\vendor\jquery\src\deferred\" />
-      <Folder Include="wwwroot\vendor\jquery\src\deprecated\" />
-      <Folder Include="wwwroot\vendor\jquery\src\effects\" />
-      <Folder Include="wwwroot\vendor\jquery\src\event\" />
-      <Folder Include="wwwroot\vendor\jquery\src\exports\" />
-      <Folder Include="wwwroot\vendor\jquery\src\manipulation\" />
-      <Folder Include="wwwroot\vendor\jquery\src\manipulation\var\" />
-      <Folder Include="wwwroot\vendor\jquery\src\queue\" />
-      <Folder Include="wwwroot\vendor\jquery\src\selector\" />
-      <Folder Include="wwwroot\vendor\jquery\src\traversing\" />
-      <Folder Include="wwwroot\vendor\jquery\src\traversing\var\" />
-      <Folder Include="wwwroot\vendor\jquery\src\var\" />
     </ItemGroup>
 
     <ItemGroup>

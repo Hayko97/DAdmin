@@ -9,7 +9,7 @@ using Microsoft.JSInterop;
 
 namespace DynamicAdmin.Components.Components;
 
-public partial class IntervalChart<TEntity>
+public partial class TimeChart<TEntity>
 {
     [Parameter] public ChartType ChartType { get; set; }
     [Parameter] public string Name { get; set; }

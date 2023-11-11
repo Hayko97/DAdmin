@@ -2,7 +2,7 @@ using DynamicAdmin.Components.Helpers;
 using DynamicAdmin.Components.Services.Interfaces;
 using DynamicAdmin.Components.ViewModels;
 
-namespace DynamicAdmin.Components.Components.ModalDialogs.Strategies;
+namespace DynamicAdmin.Components.Components.EntityDialog.Strategies;
 
 public class EntityRootDialogStrategy<TEntity> : IEntityDialogStrategy where TEntity : class
 {

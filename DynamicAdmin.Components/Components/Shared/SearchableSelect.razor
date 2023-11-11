@@ -1,18 +1,39 @@
 @code {
-    private string filterText = string.Empty;
+    private string filterText;
     private IEnumerable<KeyValuePair<string, string>> filteredItems;
     private bool isDropdownOpen = false;
 
-    [Parameter] public IEnumerable<KeyValuePair<string, string>> Items { get; set; } = new List<KeyValuePair<string, string>>();
-    [Parameter] public string SelectedValue { get; set; }
-    [Parameter] public string Class { get; set; }
-    [Parameter] public EventCallback OnClick { get; set; }
-    [Parameter] public EventCallback<string> SelectedValueChanged { get; set; }
+    [Parameter]
+    public IEnumerable<KeyValuePair<string, string>> Items { get; set; } = new List<KeyValuePair<string, string>>();
 
-    protected override async Task OnParametersSetAsync()
+    [Parameter]
+    public string SelectedValue { get; set; }
+
+    [Parameter]
+    public string Class { get; set; }
+
+    [Parameter]
+    public string Style { get; set; }
+
+    [Parameter]
+    public string TextStyle { get; set; }
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public EventCallback<string> SelectedValueChanged { get; set; }
+
+    protected override Task OnParametersSetAsync()
     {
-        filterText = string.IsNullOrEmpty(filterText) ? Items.FirstOrDefault(x => x.Key == SelectedValue).Value : filterText;
+        if (!string.IsNullOrEmpty(SelectedValue))
+        {
+            filterText = SelectedValue;
+        }
+
         filteredItems = Items;
+
+        return Task.CompletedTask;
     }
 
     private void FilterItems()
@@ -22,12 +43,12 @@
             : Items.Where(i => i.Value.Contains(filterText, StringComparison.OrdinalIgnoreCase)).ToList();
     }
 
-    private void SelectItem(KeyValuePair<string, string> item)
+    private async Task SelectItem(KeyValuePair<string, string> item)
     {
         SelectedValue = item.Key;
-        SelectedValueChanged.InvokeAsync(item.Key);
-        filterText = item.Value; 
-        CloseDropdown();
+        await SelectedValueChanged.InvokeAsync(item.Key);
+        filterText = item.Value;
+        await CloseDropdown();
     }
 
     private Task ToggleDropdown()
@@ -36,19 +57,20 @@
         return Task.CompletedTask;
     }
 
-    private Task CloseDropdown()
+    private async Task CloseDropdown()
     {
+        await Task.Delay(100);
         isDropdownOpen = false;
-        return Task.CompletedTask;
     }
+
 }
 
-<div class="searchable-dropdown position-relative @Class" tabindex="0" @onblur="CloseDropdown" @onfocusout="CloseDropdown" @onclick="OnClick">
-    <input type="text" class="form-control" @bind="filterText" @bind:event="oninput" @onkeyup="FilterItems" placeholder="Search..." @onclick="ToggleDropdown" />
-    
+<div class="searchable-dropdown position-relative @Class" tabindex="0" @onclick="OnClick" style="@Style">
+    <input type="text" class="form-control" style="@TextStyle" @bind="filterText" @bind:event="oninput" @onfocusout="CloseDropdown" @onkeyup="FilterItems" placeholder="Search..." @onclick="ToggleDropdown"/>
+
     @if (isDropdownOpen)
     {
-        <div class="dropdown-menu show w-100">
+        <div class="dropdown-menu show w-100" style="overflow-x: scroll">
             @foreach (var item in filteredItems)
             {
                 <a class="dropdown-item" @onclick="() => SelectItem(item)">@item.Value</a>

@@ -1,3 +1,11 @@
+function downloadFile(content, filename, contentType) {
+    var a = document.createElement("a");
+    var file = new Blob([content], {type: contentType});
+    a.href = URL.createObjectURL(file);
+    a.download = filename;
+    a.click();
+}
+
 function createMultiTableActivityChart(chartId, dates, datasets) {
     console.log('Dates:', dates);
     console.log('Datasets:', datasets);

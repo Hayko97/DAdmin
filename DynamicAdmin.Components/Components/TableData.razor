@@ -1,78 +1,37 @@
-@using System.ComponentModel.DataAnnotations
-@using System.Reflection
-@using DynamicAdmin.Components.Helpers
 @typeparam TEntity
 
-<h3>@EntityName</h3>
+<div class="d-flex justify-content-between align-items-center mb-3 mt-3">
+    <button class="btn btn-outline-primary" @onclick="OpenCreateModal"><i class="fa fa-file-text-o"></i>Create </button>
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <button class="btn btn-primary" @onclick="OpenCreateModal"><i class="fa fa-file-text-o"></i>Create </button>
-
+    @* TODO search by presing enter *@
     <div class="d-flex align-items-center w-25">
-        <input @bind="_searchQuery" placeholder="Search..." class="form-control mr-2"/>
-        <button @onclick="ApplySearch" class="btn btn-info">Search</button>
+        <input @bind="_searchQuery" placeholder="Search..." class="form-control form-control-sm mr-2"/>
+        <button @onclick="ApplySearch" class="btn btn-sm btn-info">Search</button>
     </div>
-
 </div>
 
 @if (_data != null && _data.Any())
 {
-    <table class="table mt-5">
-        <thead>
-        <tr>
-            @foreach (var prop in _data.FirstOrDefault().GetPropertiesWithoutRelations().Take(10))
-            {
-                var header = prop.Name;
-                <th>@header</th>
-            }
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in _data)
-        {
-            <tr>
-                @foreach (var prop in item.GetPropertiesWithoutRelations().Take(10))
-                {
-                    <td>@prop.Value</td>
-                }
-                <td>
-                    <div class="d-flex">
-                        <button class="btn btn-default btn-sm" @onclick="() => EditItem(item)">
-                            <i class="fa fa-edit"></i>
-                        </button>
-                        <button class="btn btn-default btn-sm" @onclick="() => DeleteItem(item)">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
-
-    <!-- Render pagination controls -->
-    <div class="pagination">
-        <a class="pagination-newer" href="#" @onclick="PreviousPage">PREV</a>
-    
-        <span class="pagination-inner">
-            @for (int i = 1; i <= TotalPages; i++)
-            {
-                int localI = i; // Capture variable for use in lambda
-                <a href="#" class="@(localI == _currentPage ? "pagination-active" : "")" @onclick="() => GoToPage(localI)">
-                    @localI
-                </a>
-            }
-        </span>
-    
-        <a class="pagination-older" href="#" @onclick="NextPage">NEXT</a>
+    <div class="card col-12">
+        <div class="card-body ">
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-sm btn-outline-secondary" @onclick="DownloadCsv"><i class="fa fa-download" style="padding-right: 5px"></i> CSV</button>
+            </div>
+            <TableDataGrid TEntity="TEntity"
+                           Data="_data"
+                           CurrentPage="_currentPage"
+                           TotalPages="TotalPages"
+                           OnPageChanged="LoadTableData"
+                           OnEdit="EditItem"
+                           OnDelete="DeleteItem"/>
+        </div>
     </div>
 
-    <EditEntityDialog TEntity="TEntity" EntityName="@EntityName" SelectedEntity="_selectedItem" @bind-IsOpen="_isEditModalOpen" OnSave="OnEditModalSave"/>
+    <EditEntityDialog TEntity="TEntity" EntityName="@_entityName" SelectedEntity="_selectedItem" @bind-IsOpen="_isEditModalOpen" OnSave="OnEditModalSave"/>
 }
 else
 {
     <h4 class="text-center mt-5 text-black-50">No Data</h4>
 }
 
-<CreateEntityDialog TEntity="TEntity" @bind-IsOpen="_isCreateModalOpen" EntityName="@EntityName" OnSave="OnCreateModalSave"/>
+<CreateEntityDialog TEntity="TEntity" @bind-IsOpen="_isCreateModalOpen" EntityName="@_entityName" OnSave="OnCreateModalSave"/>

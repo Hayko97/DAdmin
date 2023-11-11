@@ -25,7 +25,7 @@
             _createEntityDialogComponent = builder =>
             {
                 builder.OpenComponent(0, typeof(CreateEntityDialog<>).MakeGenericType(entityType));
-                builder.AddAttribute(1, "EntityName", TableName);
+                builder.AddAttribute(1, "ResourceName", TableName);
                 builder.AddAttribute(1, "IsOpen", true);
                 builder.CloseComponent();
             };

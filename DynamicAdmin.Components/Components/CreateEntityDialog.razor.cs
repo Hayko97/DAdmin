@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DynamicAdmin.Components.Components.ModalDialogs.Strategies;
+using DynamicAdmin.Components.Components.EntityDialog.Strategies;
 using DynamicAdmin.Components.Extensions;
 using Microsoft.AspNetCore.Components;
 using DynamicAdmin.Components.Helpers;
@@ -18,7 +18,6 @@ namespace DynamicAdmin.Components.Components
         [Parameter] public string EntityName { get; set; }
         [Parameter] public EventCallback<TEntity> OnSave { get; set; }
         [Parameter] public EventCallback OnCloseModal { get; set; }
-
         [Inject] public IDataService<TEntity> DataService { get; set; }
         [Inject] public IDataMapperService<TEntity> DataMapperService { get; set; }
         [Inject] public IDbInfoService DbInfoService { get; set; }
@@ -102,7 +101,7 @@ namespace DynamicAdmin.Components.Components
             {
                 InputStringValues[item.Key] = item.Value;
             }
-            
+
             StateHasChanged();
         }
 

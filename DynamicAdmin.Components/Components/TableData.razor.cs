@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text;
 using DynamicAdmin.Components.Helpers;
 using DynamicAdmin.Components.Services;
 using DynamicAdmin.Components.Services.Interfaces;
@@ -18,15 +19,15 @@ namespace DynamicAdmin.Components.Components
         private string _previousTableName;
         private string _searchQuery = string.Empty;
         private int _currentPage = 1;
-        
+        private string _entityName;
+
         private List<Entity<TEntity>> _data = new();
         private Entity<TEntity> _selectedItem;
-
-        private bool IsFirstPage => _currentPage == 1;
-        private bool IsLastPage => _currentPage == TotalPages;
         private int TotalPages { get; set; }
 
-        [Parameter] public string EntityName { get; set; }
+        [Parameter] public string ResourceName { get; set; }
+        [Parameter] public Func<IQueryable<TEntity>, IQueryable<TEntity>> QueryLogic { get; set; }
+
         [Inject] private IJSRuntime JSRuntime { get; set; }
         [Inject] private IDataService<TEntity> DataService { get; set; }
 
@@ -38,10 +39,11 @@ namespace DynamicAdmin.Components.Components
         {
             try
             {
-                if (!string.IsNullOrEmpty(EntityName) && DataService != null && EntityName != _previousTableName)
+                if (!string.IsNullOrEmpty(ResourceName) && DataService != null && ResourceName != _previousTableName)
                 {
-                    await LoadTableData();
-                    _previousTableName = EntityName;
+                    _entityName = typeof(TEntity).Name;
+                    await LoadTableData(_currentPage);
+                    _previousTableName = ResourceName;
                 }
             }
             catch (Exception ex)
@@ -54,9 +56,10 @@ namespace DynamicAdmin.Components.Components
 
         #region Data Operations
 
-        private async Task LoadTableData()
+        private async Task LoadTableData(int currentPage)
         {
-            var response = await DataService.GetPaginatedAsync(EntityName, _currentPage, _searchQuery);
+            _currentPage = currentPage;
+            var response = await DataService.GetPaginatedAsync(QueryLogic, currentPage, _searchQuery);
             _data = response.Data;
             TotalPages = response.TotalPages;
             StateHasChanged();
@@ -65,31 +68,7 @@ namespace DynamicAdmin.Components.Components
         private async Task ApplySearch()
         {
             _currentPage = 1;
-            await LoadTableData();
-        }
-
-        private async Task NextPage()
-        {
-            if (!IsLastPage)
-            {
-                _currentPage++;
-                await LoadTableData();
-            }
-        }
-
-        private async Task PreviousPage()
-        {
-            if (!IsFirstPage)
-            {
-                _currentPage--;
-                await LoadTableData();
-            }
-        }
-
-        private async void GoToPage(int pageNumber)
-        {
-            _currentPage = pageNumber;
-            await LoadTableData();
+            await LoadTableData(_currentPage);
         }
 
         private async Task DeleteItem(Entity<TEntity> item)
@@ -97,9 +76,33 @@ namespace DynamicAdmin.Components.Components
             var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this item?");
             if (confirmed)
             {
-                await DataService.DeleteAsync(EntityName, item.EntityModel);
-                await LoadTableData(); // Refresh data after deletion
+                await DataService.DeleteAsync(ResourceName, item.EntityModel);
+                await LoadTableData(_currentPage); // Refresh data after deletion
             }
+        }
+
+        private string ConvertToCsv(IEnumerable<Entity<TEntity>> data)
+        {
+            var csvBuilder = new StringBuilder();
+            var properties = data.FirstOrDefault().GetPropertiesWithoutRelations();
+
+            // Adding header
+            csvBuilder.AppendLine(string.Join(",", properties.Select(name => name.Name.ToString())));
+
+            // Adding data
+            foreach (var item in data)
+            {
+                var line = string.Join(",", item.Properties.Select(p => p.Value));
+                csvBuilder.AppendLine(line);
+            }
+
+            return csvBuilder.ToString();
+        }
+
+        private async Task DownloadCsv()
+        {
+            var csvContent = ConvertToCsv(_data);
+            await JSRuntime.InvokeVoidAsync("downloadFile", csvContent, "data.csv", "text/csv");
         }
 
         #endregion
@@ -136,13 +139,13 @@ namespace DynamicAdmin.Components.Components
 
         private async Task OnCreateModalSave()
         {
-            await LoadTableData();
+            await LoadTableData(_currentPage);
             StateHasChanged();
         }
 
         private async Task OnEditModalSave()
         {
-            await LoadTableData();
+            await LoadTableData(_currentPage);
             StateHasChanged();
         }
 

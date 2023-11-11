@@ -1,6 +1,6 @@
 using DynamicAdmin.Components.ViewModels;
 
-namespace DynamicAdmin.Components.Components.ModalDialogs.Strategies;
+namespace DynamicAdmin.Components.Components.EntityDialog.Strategies;
 
 public interface IEntityDialogStrategy
 {

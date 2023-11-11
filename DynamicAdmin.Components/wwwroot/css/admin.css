@@ -1,73 +1,10 @@
-.wrapper {
-    width: 100%;
-}
-
-.sidebar {
-    min-width: 270px;
-    max-width: 270px;
-    background: #2e567e;
-    color: #fff;
-    -webkit-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
-    position: relative;
-}
-
-.sidebar .h6 {
-    color: #fff;
-}
-
-.sidebar.active {
-    margin-left: -270px;
-}
-
-.sidebar .sidebar-item {
-    padding-left: 20px;
-    font-size: 18px;
-}
-
-.sidebar ul.components {
-    padding: 0;
-}
-
-.sidebar ul li {
-    font-size: 15px;
-    padding-left: 30px;
-}
-
-.sidebar ul li > ul {
-    margin-left: 10px;
-}
-
-.sidebar ul li > ul li {
-    font-size: 12px;
-}
-
-.sidebar ul li a {
-    padding: 5px 0;
-    display: block;
-    color: rgba(255, 255, 255, 0.6);
-    /*border-bottom: 1px solid rgba(255, 255, 255, 0.1);*/
-}
-
-.sidebar ul li a span {
-    color: #44bef1;
-}
-
-.sidebar ul li a:hover {
-    color: #fff;
-    text-decoration: underline;
-}
-
-.sidebar ul li.active > a {
-    background: transparent;
-    color: #fff;
-}
-
-.sidebar ul li.active {
-    background: rgba(23, 162, 184, 0.4);
-    color: #fff;
-}
+@import "../font-awesome/css/fontawesome.css";
+@import "../font-awesome/css/brands.css";
+@import "../font-awesome/css/solid.css";
+@import "../vendor/base/vendor.bundle.base.css";
+@import "../vendor/mdi/css/materialdesignicons.min.css";
+@import "../vendor/datatables.net-bs4/dataTables.bootstrap4.css";
+@import "style.css";
 
 .content {
     width: 100%;
@@ -78,69 +15,41 @@
     transition: all 0.3s;
 }
 
-@media (max-width: 991.98px) {
-    .sidebar {
-        margin-left: -270px;
-    }
-
-    .sidebar.active {
-        margin-left: 0;
-    }
+.chartSelect {
+    height: 30px !important;
+    padding: 0 !important;
+    padding-left: 8px !important;
+    margin-right: 12px;
 }
 
-.sidebar .custom-menu {
-    display: inline-block;
-    position: absolute;
-    top: 20px;
-    right: 0;
-    margin-right: -20px;
-    -webkit-transition: 0.3s;
-    -o-transition: 0.3s;
-    transition: 0.3s;
+.nav-item.active {
+    background-color: #4d83ff;
+    color: white;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .sidebar .custom-menu {
-        -webkit-transition: none;
-        -o-transition: none;
-        transition: none;
-    }
+.nav-item.active:hover {
+    background-color: #4d83ff !important;
+    color: white;
 }
 
-.sidebar .custom-menu .btn {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    position: relative;
+.nav-item.active .nav-link {
+    color: white !important;
 }
 
-.sidebar .custom-menu .btn i {
-    margin-right: -40px;
-    font-size: 14px;
+.sidebar .nav.sub-menu {
+    padding: 0;
 }
 
-.sidebar .custom-menu .btn.btn-primary {
-    background: transparent;
-    border-color: transparent;
+.pagination .page-link {
+    padding: 2px 10px !important;
+    border: none !important;
+    border-radius: 50% !important;
+    color: #1a1e21;
 }
 
-.sidebar .custom-menu .btn.btn-primary:after {
-    z-index: -1;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    content: '';
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
-    background: #3445b4;
-    border-radius: 10px;
+.pagination .page-item.active > .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #7859df;
+    border-color: #7859df;
 }
-
-.sidebar .custom-menu .btn.btn-primary:hover, .sidebar .custom-menu .btn.btn-primary:focus {
-    background: transparent !important;
-    border-color: transparent !important;
-}
-

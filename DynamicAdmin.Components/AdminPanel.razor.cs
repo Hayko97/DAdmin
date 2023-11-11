@@ -50,7 +50,7 @@ public partial class AdminPanel
             _renderedContent = builder =>
             {
                 builder.OpenComponent(0, typeof(TableData<>).MakeGenericType(entityType));
-                builder.AddAttribute(1, "EntityName", name);
+                builder.AddAttribute(1, "ResourceName", name);
                 builder.CloseComponent();
             };
 
