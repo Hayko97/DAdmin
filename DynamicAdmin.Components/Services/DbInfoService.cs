@@ -1,5 +1,10 @@
 using System.Reflection;
+using DynamicAdmin.Components.Builders;
+using DynamicAdmin.Components.Components.ViewModels;
 using DynamicAdmin.Components.Services.Interfaces;
+using DynamicAdmin.Components.ViewModels;
+using DynamicAdmin.Components.ViewModels.Stats;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DynamicAdmin.Components.Services;
@@ -18,6 +23,11 @@ public class DbInfoService : DbService, IDbInfoService
     public IEnumerable<string> GetEntityNames()
     {
         return DbContext.Model.GetEntityTypes().Select(x => x.ClrType.Name).ToList();
+    }
+
+    public StatsBuilder GetStatsBuilder()
+    {
+        return new StatsBuilder(DbContext);
     }
 
     public Task<string> GetEntityName(PropertyInfo propertyInfo)

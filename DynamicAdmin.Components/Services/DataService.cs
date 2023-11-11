@@ -2,9 +2,12 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
+using DynamicAdmin.Components.Components.Charts.ViewModels;
+using DynamicAdmin.Components.Extensions;
 using DynamicAdmin.Components.Helpers;
 using DynamicAdmin.Components.Services.Interfaces;
 using DynamicAdmin.Components.ViewModels;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualBasic;
 
@@ -13,7 +16,7 @@ namespace DynamicAdmin.Components.Services;
 public class DataService<TEntity> : DbService, IDataService<TEntity> where TEntity : class
 {
     private const int PageSize = 10;
-    
+
     public DataService(IServiceProvider serviceProvider) : base(serviceProvider)
     {
     }
@@ -46,9 +49,9 @@ public class DataService<TEntity> : DbService, IDataService<TEntity> where TEnti
         var data = await dbSet.Skip(skipAmount).Take(PageSize).ToListAsync();
 
         var tableEntities = data.Select(item =>
-            new EntityViewModel<TEntity>
+            new Entity<TEntity>
             {
-                Entity = item,
+                EntityModel = item,
                 Properties = item.GetType().GetProperties().Select(prop =>
                     new EntityProperty
                     {
@@ -70,6 +73,7 @@ public class DataService<TEntity> : DbService, IDataService<TEntity> where TEnti
             TotalPages = totalPages
         };
     }
+
     private Expression<Func<TEntity, bool>> GetSearchPredicate(string searchTerm)
     {
         var properties = typeof(TEntity).GetProperties()
@@ -119,6 +123,52 @@ public class DataService<TEntity> : DbService, IDataService<TEntity> where TEnti
         await DbContext.SaveChangesAsync();
 
         return result.Entity;
+    }
+
+    //TODO DRY Violation FIX
+    public async Task<object> CreateAsync(string entityName, object entity)
+    {
+        var entityType = DbContext.Model.GetEntityTypes()
+            .FirstOrDefault(e => e.ClrType.Name.Equals(entityName, StringComparison.OrdinalIgnoreCase));
+
+        if (entityType == null) return null;
+
+        // Get the generic method for DbSet<T>.
+        var dbSetMethod = typeof(DbContext).GetMethods()
+            .First(m => m.IsGenericMethod && m.Name == nameof(DbContext.Set))
+            .MakeGenericMethod(entityType.ClrType);
+
+        // Invoke the method to get the DbSet for the specific entity type.
+        var dbSet = dbSetMethod.Invoke(DbContext, null);
+
+        PropertyInfo idProperty = entityType.FindPrimaryKey().Properties
+            .FirstOrDefault()?.PropertyInfo;
+
+        if (idProperty?.PropertyType == typeof(Guid))
+        {
+            var idValue = idProperty.GetValue(entity);
+            if ((Guid)idValue == Guid.Empty)
+            {
+                idProperty.SetValue(entity, Guid.NewGuid());
+            }
+        }
+
+        // Get the Add method for the DbSet<T> appropriate to the entity type.
+        var addMethod = dbSet.GetType().GetMethods()
+            .First(m => m.Name == "Add" && m.GetParameters().Length == 1 &&
+                        m.GetParameters()[0].ParameterType.IsAssignableFrom(entityType.ClrType));
+
+        // Use MethodInfo.Invoke to add the entity to the DbSet.
+        var entityEntry = addMethod.Invoke(dbSet, new[] { entity }) as EntityEntry;
+
+        await DbContext.SaveChangesAsync();
+
+        return entityEntry?.Entity;
+    }
+
+    public IQueryable<TEntity> Query()
+    {
+        return DbContext.Set<TEntity>().AsQueryable();
     }
 
     public async Task<TEntity> UpdateAsync(string tableName, TEntity entity)

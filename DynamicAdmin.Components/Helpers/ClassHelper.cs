@@ -72,9 +72,42 @@ public static class ClassHelper
             value = value.ToString()[0];
         }
 
-        prop.SetValue(item, value);
+        try
+        {
+            prop.SetValue(item, value);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    public static bool IsNullOrDefaultValue(PropertyInfo prop, object value)
+    {
+        // If the value is null, we immediately know it's either the default value
+        // for a reference type, or an explicitly set null for a nullable value type.
+        if (value == null) return true;
+
+        // Get the type of the property
+        Type type = prop.PropertyType;
+
+        // If it's a value type and not a nullable type, compare with the default value.
+        if (type.IsValueType && Nullable.GetUnderlyingType(type) == null)
+        {
+            object defaultValue = Activator.CreateInstance(type);
+            return value.Equals(defaultValue);
+        }
+
+        // For nullable value types, if it's not null, it's not the default value.
+        // For reference types, we've already checked for null.
+        return false;
     }
 
+    public static object GetPropertyValue(object obj, string propName)
+    {
+        return obj.GetType().GetProperty(propName)?.GetValue(obj);
+    }
     public static bool IsNumericType(Type type)
     {
         return type == typeof(byte) ||

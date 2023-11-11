@@ -19,8 +19,8 @@ namespace DynamicAdmin.Components.Components
         private string _searchQuery = string.Empty;
         private int _currentPage = 1;
         
-        private List<EntityViewModel<TEntity>> _data = new();
-        private EntityViewModel<TEntity> _selectedItem;
+        private List<Entity<TEntity>> _data = new();
+        private Entity<TEntity> _selectedItem;
 
         private bool IsFirstPage => _currentPage == 1;
         private bool IsLastPage => _currentPage == TotalPages;
@@ -92,12 +92,12 @@ namespace DynamicAdmin.Components.Components
             await LoadTableData();
         }
 
-        private async Task DeleteItem(EntityViewModel<TEntity> item)
+        private async Task DeleteItem(Entity<TEntity> item)
         {
             var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this item?");
             if (confirmed)
             {
-                await DataService.DeleteAsync(EntityName, item.Entity);
+                await DataService.DeleteAsync(EntityName, item.EntityModel);
                 await LoadTableData(); // Refresh data after deletion
             }
         }
@@ -116,7 +116,7 @@ namespace DynamicAdmin.Components.Components
             _isCreateModalOpen = false;
         }
 
-        private async Task OpenEditModal(EntityViewModel<TEntity> item)
+        private async Task OpenEditModal(Entity<TEntity> item)
         {
             _selectedItem = item;
             _isEditModalOpen = true;
@@ -129,7 +129,7 @@ namespace DynamicAdmin.Components.Components
             _selectedItem = default;
         }
 
-        private async Task EditItem(EntityViewModel<TEntity> item)
+        private async Task EditItem(Entity<TEntity> item)
         {
             await OpenEditModal(item);
         }

@@ -1,12 +1,17 @@
-<div class="wrapper d-flex align-items-stretch">
+@using DynamicAdmin.Components.Components.ViewModels
+<div class="container-fluid page-body-wrapper">
 
     <Menu OnSelectedItem="OnSelectedItem"/>
 
-    <!-- Page Content  -->
-    <div class="content p-4 p-md-5 pt-5">
-        @if (!string.IsNullOrEmpty(_selectedMenuItem))
-        {
-            @_tableDataComponent
-        }
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="row">
+                <div class="col-md-12 stretch-card">
+                    <div class="content p-2">
+                        @_renderedContent
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

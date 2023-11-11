@@ -4,7 +4,7 @@ namespace DynamicAdmin.Components.Services.Interfaces;
 
 public interface IDataMapperService<TEntity> where TEntity : class
 {
-    Task<EntityViewModel<TEntity>> GetEntityViewModel(TEntity entity);
+    Task<Entity<TEntity>> GetEntityViewModel(TEntity entity);
 
-    Task<EntityViewModel<object>> GetEntityViewModel(object entity);
+    Task<Entity<object>> GetEntityViewModel(object entity);
 }
