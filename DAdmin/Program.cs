@@ -1,5 +1,5 @@
 using DAdmin.Data;
-using DynamicAdmin.Components;
+using DAdmin.Components;
 using Esel.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;

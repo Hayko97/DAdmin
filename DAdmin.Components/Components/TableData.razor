@@ -1,0 +1,64 @@
+@using DAdmin.Components.Components.EntityDialog
+@typeparam TEntity
+
+<div class="d-flex justify-content-between align-items-center mb-3 mt-3">
+    <button class="btn btn-outline-primary" @onclick="OpenCreateModal"><i class="fa fa-file-text-o"></i>Create </button>
+
+    @* TODO search by presing enter *@
+    <div class="d-flex align-items-center w-25 justify-content-end">
+        @* <input @bind="_searchQuery" placeholder="Search..." class="form-control form-control-sm mr-2"/> *@
+        @* <button @onclick="ApplySearch" class="btn btn-sm btn-info">Search</button> *@
+    </div>
+</div>
+
+@if (_data != null && _data.Any())
+{
+    <div class="card col-12">
+        <div class="card-body ">
+            @if (_selectedRecords.Any())
+            {
+                <div class="d-flex pb-3 justify-content-end">
+                    <button class="btn btn-outline-secondary btn-sm m-1 p-2" @onclick="DownloadCsv"><i class="fa fa-download" style="padding-right: 5px"></i> CSV</button>
+                    <button class="btn btn-outline-danger btn-sm m-1 p-2" @onclick="async () => await DeleteSelectedItems()">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>
+            }
+            <DataGrid TItem="TEntity"
+                      Data="_dataBlazorise"
+                      ReadData="@OnReadData"
+                      TotalItems="TotalCount"
+                      SelectionMode="DataGridSelectionMode.Multiple"
+                      @bind-SelectedRows="_selectedRecords"
+                      PageSize="10"
+                      ShowPager
+                      Responsive
+                      Filterable
+                      FilterMethod="DataGridFilterMethod.StartsWith">
+                <DataGridMultiSelectColumn TItem="TEntity" Width="30px"></DataGridMultiSelectColumn>
+                @foreach (var prop in _data.FirstOrDefault().GetPropertiesWithoutRelations().Take(10))
+                {
+                    <DataGridColumn Field="@prop.Name" Caption="@prop.Name" Sortable="true" Editable="false"/>
+                }
+                <DataGridColumn TItem="TEntity" Caption="Actions" Filterable="false">
+                    <DisplayTemplate>
+                        <span class="btn btn-outline-secondary btn-sm m-1 p-2" @onclick="(e) => EditSelectedRow(e, context)">
+                            <i class="fa fa-edit"></i>
+                        </span>
+                    </DisplayTemplate>
+                </DataGridColumn>
+            </DataGrid>
+        </div>
+    </div>
+
+    if (_selectedRow != null)
+    {
+        <EntityActionDialog TEntity="TEntity" EntityName="@_entityName" SelectedEntity="_selectedRow" DialogMode="DialogMode.Edit" @bind-IsOpen="_isEditModalOpen" OnSave="OnEditModalSave"/>
+    }
+}
+else
+{
+    <h4 class="text-center mt-5 text-black-50">No Data</h4>
+}
+
+<EntityActionDialog TEntity="TEntity" @bind-IsOpen="_isCreateModalOpen" DialogMode="DialogMode.Create" EntityName="@_entityName" OnSave="OnCreateModalSave"/>

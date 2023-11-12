@@ -25,7 +25,13 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\Documents\GitHub\Esel\Esel.Infrastructure\Esel.Infrastructure.csproj" />
-        <ProjectReference Include="..\DynamicAdmin.Components\DynamicAdmin.Components.csproj" />
+        <ProjectReference Include="..\DAdmin.Components\DAdmin.Components.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="DynamicAdmin.Components">
+        <HintPath>bin\Debug\net6.0\DynamicAdmin.Components.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>
