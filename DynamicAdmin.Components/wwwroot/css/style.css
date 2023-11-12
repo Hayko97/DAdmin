@@ -12067,7 +12067,7 @@ fieldset:disabled .btn {
 }
 
 .btn-outline-danger:hover {
-    color: #000;
+    color: #fff;
     background-color: #ff4747;
     border-color: #ff4747;
 }
@@ -12078,7 +12078,7 @@ fieldset:disabled .btn {
 
 .btn-check:checked + .btn-outline-danger,
 .btn-check:active + .btn-outline-danger, .btn-outline-danger:active, .btn-outline-danger.active, .btn-outline-danger.dropdown-toggle.show {
-    color: #000;
+    color: #fff;
     background-color: #ff4747;
     border-color: #ff4747;
 }
@@ -21510,7 +21510,7 @@ code {
 }
 
 .btn i {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
 }
 
 .btn.btn-rounded {
@@ -23228,7 +23228,7 @@ dl li {
 .table thead th {
     border-top: 0;
     border-bottom-width: 1px;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 1rem;
 }
 

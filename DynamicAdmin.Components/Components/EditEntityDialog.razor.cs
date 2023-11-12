@@ -11,25 +11,29 @@ public partial class EditEntityDialog<TEntity> where TEntity : class
 {
     [Parameter] public bool IsOpen { get; set; }
     [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
-    [Parameter] public Entity<TEntity> SelectedEntity { get; set; }
+    [Parameter] public TEntity SelectedEntity { get; set; }
     [Parameter] public string EntityName { get; set; }
     [Parameter] public EventCallback<TEntity> OnSave { get; set; }
     [Parameter] public EventCallback OnCloseModal { get; set; }
 
     [Inject] private IDataService<TEntity> DataService { get; set; }
+    [Inject] private IDataMapperService<TEntity> DataMapperService { get; set; }
     [Inject] private IJSRuntime JSRuntime { get; set; }
 
     private Dictionary<string, object> _inputValues = new();
     private Dictionary<string, string> _inputStringValues = new();
+    
+    private Entity<TEntity> _entity = new();
 
-    protected override Task OnParametersSetAsync()
+    protected override async Task OnParametersSetAsync()
     {
         _inputValues.Clear();
         _inputStringValues.Clear();
 
         if (SelectedEntity != null)
         {
-            foreach (var prop in SelectedEntity.Properties)
+            _entity = await DataMapperService.GetEntityViewModel(SelectedEntity);
+            foreach (var prop in _entity.Properties)
             {
                 if (!_inputValues.ContainsKey(prop.Name))
                 {
@@ -42,8 +46,6 @@ public partial class EditEntityDialog<TEntity> where TEntity : class
                 }
             }
         }
-
-        return Task.CompletedTask;
     }
 
     private async Task UpdateEntity()
@@ -56,17 +58,17 @@ public partial class EditEntityDialog<TEntity> where TEntity : class
                 return;
             }
 
-            foreach (var prop in SelectedEntity.GetPropertiesWithoutRelations())
+            foreach (var prop in _entity.GetPropertiesWithoutRelations())
             {
                 if (_inputStringValues.ContainsKey(prop.Name))
                 {
                     ClassHelper.SetStringValue(_inputStringValues[prop.Name], prop.TablePropertyInfo,
-                        SelectedEntity.EntityModel);
+                        _entity.EntityModel);
                 }
             }
 
-            await DataService.UpdateAsync(EntityName, SelectedEntity.EntityModel);
-            await OnSave.InvokeAsync(SelectedEntity.EntityModel);
+            await DataService.UpdateAsync(EntityName, _entity.EntityModel);
+            await OnSave.InvokeAsync(_entity.EntityModel);
             await IsOpenChanged.InvokeAsync(false);
         }
         catch (Exception ex)

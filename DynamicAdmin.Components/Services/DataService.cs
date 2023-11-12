@@ -1,77 +1,30 @@
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
+using Blazorise;
+using Blazorise.DataGrid;
+using Blazorise.Utilities;
 using DynamicAdmin.Components.Components.Charts.ViewModels;
 using DynamicAdmin.Components.Extensions;
 using DynamicAdmin.Components.Helpers;
 using DynamicAdmin.Components.Services.Interfaces;
 using DynamicAdmin.Components.ViewModels;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualBasic;
 
 namespace DynamicAdmin.Components.Services;
 
+//TODO DRY and KISS Violation FIX
 public class DataService<TEntity> : DbService, IDataService<TEntity> where TEntity : class
 {
     private const int PageSize = 10;
 
     public DataService(IServiceProvider serviceProvider) : base(serviceProvider)
     {
-    }
-
-    public async Task<PaginatedResponse<TEntity>> GetPaginatedAsync(string tableName, int page,
-        string searchTerm = null)
-    {
-        // 
-        var entityType = DbContext.Model.GetEntityTypes()
-            .FirstOrDefault(e => e.ClrType.Name.Equals(tableName, StringComparison.OrdinalIgnoreCase));
-
-        if (entityType == null) return null;
-
-        var method = typeof(DbContext).GetMethod(nameof(DbContext.Set),
-                BindingFlags.Public | BindingFlags.Instance,
-                null,
-                Type.EmptyTypes,
-                null)
-            .MakeGenericMethod(entityType.ClrType);
-
-        var dbSet = method.Invoke(DbContext, null) as IQueryable<TEntity>;
-
-        if (!string.IsNullOrWhiteSpace(searchTerm))
-        {
-            var predicate = GetSearchPredicate(searchTerm);
-            dbSet = dbSet.Where(predicate);
-        }
-
-        int skipAmount = (page - 1) * PageSize;
-        var data = await dbSet.Skip(skipAmount).Take(PageSize).ToListAsync();
-
-        var tableEntities = data.Select(item =>
-            new Entity<TEntity>
-            {
-                EntityModel = item,
-                Properties = item.GetType().GetProperties().Select(prop =>
-                    new EntityProperty
-                    {
-                        TablePropertyInfo = prop,
-                        Name = prop.Name,
-                        Value = prop.GetValue(item),
-                        IsNavigationProperty = DbContext.IsNavigationProperty(item.GetType(), prop),
-                    }
-                ).ToList()
-            }
-        ).ToList();
-
-        int totalItems = await dbSet.CountAsync();
-        int totalPages = (totalItems + PageSize - 1) / PageSize;
-
-        return new PaginatedResponse<TEntity>
-        {
-            Data = tableEntities,
-            TotalPages = totalPages
-        };
     }
 
     public async Task<PaginatedResponse<TEntity>> GetPaginatedAsync(
@@ -119,10 +72,129 @@ public class DataService<TEntity> : DbService, IDataService<TEntity> where TEnti
         return new PaginatedResponse<TEntity>
         {
             Data = tableEntities,
-            TotalPages = totalPages
+            TotalPages = totalPages,
+            TotalCount = totalItems
         };
     }
 
+    public async Task<PaginatedResponse<TEntity>> GetPaginatedAsync(
+        Func<IQueryable<TEntity>, IQueryable<TEntity>> queryLogic,
+        int page,
+        IEnumerable<DataGridColumnInfo> columnInfos
+    )
+    {
+        IQueryable<TEntity> query = Query();
+
+        // Apply custom query logic if provided
+        if (queryLogic != null)
+        {
+            query = queryLogic(query);
+        }
+
+
+        foreach (var columnInfo in columnInfos.Where(c =>
+                     c.SearchValue != null && !string.IsNullOrEmpty(c.SearchValue.ToString())))
+        {
+            var propertyInfo = typeof(TEntity).GetProperty(columnInfo.Field);
+            if (propertyInfo == null)
+            {
+                // Skip if the property does not exist
+                continue;
+            }
+
+            var parameter = Expression.Parameter(typeof(TEntity), "x");
+            var property = Expression.Property(parameter, columnInfo.Field);
+
+            Expression predicate;
+            var searchValueAsString = columnInfo.SearchValue.ToString();
+
+            if (propertyInfo.PropertyType == typeof(string))
+            {
+                // Use Contains for string properties
+                predicate = Expression.Call(property, nameof(string.Contains), null,
+                    Expression.Constant(searchValueAsString));
+            }
+            else if (propertyInfo.PropertyType.IsNumeric())
+            {
+                // For numeric properties, convert them to string within the query
+                var toStringCall = Expression.Call(property, nameof(object.ToString), Type.EmptyTypes);
+                predicate = Expression.Call(toStringCall, nameof(string.Contains), null,
+                    Expression.Constant(searchValueAsString));
+            }
+            else if (propertyInfo.PropertyType == typeof(DateTime) || propertyInfo.PropertyType == typeof(DateTime?))
+            {
+                // For DateTime properties, convert them to string within the query
+                // Adjust the format as necessary
+                var toStringCall = Expression.Call(property, nameof(DateTime.ToString), null,
+                    Expression.Constant("yyyy-MM-dd"));
+                predicate = Expression.Call(toStringCall, nameof(string.Contains), null,
+                    Expression.Constant(searchValueAsString));
+            }
+            else
+            {
+                // Skip other types
+                continue;
+            }
+
+            var lambda = Expression.Lambda<Func<TEntity, bool>>(predicate, parameter);
+            query = query.Where(lambda);
+        }
+
+
+        // Sorting logic
+        var sortedColumnInfos = columnInfos
+            .Where(c => !string.IsNullOrWhiteSpace(c.SortField))
+            .OrderBy(c => c.SortIndex);
+        foreach (var columnInfo in sortedColumnInfos)
+        {
+            var propertyInfo = typeof(TEntity).GetProperty(columnInfo.SortField);
+            if (propertyInfo == null)
+            {
+                // Handle the case where the sort property does not exist on TEntity
+                continue;
+            }
+
+            var parameter = Expression.Parameter(typeof(TEntity), "x");
+            var property = Expression.Property(parameter, columnInfo.SortField);
+            var lambda = Expression.Lambda(property, parameter);
+
+            var methodName = (columnInfo.SortDirection == SortDirection.Ascending ? "OrderBy" : "OrderByDescending");
+            var method = typeof(Queryable).GetMethods()
+                .First(m => m.Name == methodName && m.GetParameters().Length == 2)
+                .MakeGenericMethod(typeof(TEntity), propertyInfo.PropertyType);
+
+            query = (IQueryable<TEntity>)method.Invoke(null, new object[] { query, lambda });
+        }
+
+        int skipAmount = (page - 1) * PageSize;
+        var data = await query.Skip(skipAmount).Take(PageSize).ToListAsync();
+
+        var tableEntities = data.Select(item =>
+            new Entity<TEntity>
+            {
+                EntityModel = item,
+                Properties = item.GetType().GetProperties().Select(prop =>
+                    new EntityProperty
+                    {
+                        TablePropertyInfo = prop,
+                        Name = prop.Name,
+                        Value = prop.GetValue(item),
+                        IsNavigationProperty = DbContext.IsNavigationProperty(item.GetType(), prop),
+                    }
+                ).ToList()
+            }
+        ).ToList();
+
+        int totalItems = await query.CountAsync();
+
+        int totalPages = (totalItems + PageSize - 1) / PageSize;
+        return new PaginatedResponse<TEntity>
+        {
+            Data = tableEntities,
+            TotalPages = totalPages,
+            TotalCount = totalItems
+        };
+    }
 
     private Expression<Func<TEntity, bool>> GetSearchPredicate(string searchTerm)
     {
@@ -175,7 +247,6 @@ public class DataService<TEntity> : DbService, IDataService<TEntity> where TEnti
         return result.Entity;
     }
 
-    //TODO DRY Violation FIX
     public async Task<object> CreateAsync(string entityName, object entity)
     {
         var entityType = DbContext.Model.GetEntityTypes()
@@ -244,43 +315,17 @@ public class DataService<TEntity> : DbService, IDataService<TEntity> where TEnti
             DbContext.Remove(entity);
             await DbContext.SaveChangesAsync();
         }
-        catch (DbUpdateException e)
+        catch (DbUpdateException ex)
         {
-            throw new Exception("The DELETE statement conflicted with the REFERENCE constraint");
+            if (ex.InnerException?.Message != null)
+            {
+                throw new DbUpdateException(ex.InnerException?.Message);
+            }
+            else
+            {
+                throw new DbUpdateException(ex.Message);
+            }
         }
-    }
-
-    public async Task DeleteWithReferencesAsync(string tableName, TEntity entity)
-    {
-        // 1. Identify and load referencing records
-        var references = DbContext.Model.FindEntityType(typeof(TEntity))
-            .GetReferencingForeignKeys();
-
-        foreach (var fk in references)
-        {
-            var relatedEntityType = fk.DeclaringEntityType.ClrType;
-            var setMethod = typeof(DbContext)
-                .GetMethod(nameof(DbContext.Set), BindingFlags.Public | BindingFlags.Instance)
-                .MakeGenericMethod(relatedEntityType);
-            var set = setMethod.Invoke(DbContext, null);
-
-            var foreignKeyPropertyName = fk.Properties.First().Name;
-            var keyValue = entity.GetType().GetProperty("Id").GetValue(entity);
-
-            var whereMethod = typeof(Queryable).GetMethods()
-                .First(m => m.Name == "Where" && m.GetParameters().Length == 2)
-                .MakeGenericMethod(relatedEntityType);
-            var lambda = CreateEqualsExpression(relatedEntityType, foreignKeyPropertyName, keyValue);
-            var recordsToDelete = whereMethod.Invoke(null, new object[] { set, lambda }) as IQueryable;
-
-            DbContext.RemoveRange(recordsToDelete);
-        }
-
-        // 2. Delete the main record
-        DbContext.Remove(entity);
-
-        // 3. Save the changes
-        await DbContext.SaveChangesAsync();
     }
 
     private static LambdaExpression CreateEqualsExpression(Type entityType, string propertyName, object value)

@@ -1,3 +1,6 @@
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
 using DynamicAdmin.Components.Services;
 using DynamicAdmin.Components.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -18,5 +21,10 @@ public static class DAdminSetup
 
         services.AddMvcCore().AddRazorPages()
             .AddApplicationPart(typeof(DynamicAdmin.Components.Pages.CreateEntity).Assembly);
+
+        services
+            .AddBlazorise(options => { options.Immediate = true; })
+            .AddBootstrapProviders()
+            .AddFontAwesomeIcons();
     }
 }

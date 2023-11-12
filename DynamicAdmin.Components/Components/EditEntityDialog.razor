@@ -13,7 +13,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row w-75 m-auto">
-                        @foreach (var prop in SelectedEntity.Properties)
+                        @foreach (var prop in _entity.Properties)
                         {
                             if (prop.IsForeignKey)
                             {

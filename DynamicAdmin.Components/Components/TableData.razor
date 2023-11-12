@@ -4,9 +4,9 @@
     <button class="btn btn-outline-primary" @onclick="OpenCreateModal"><i class="fa fa-file-text-o"></i>Create </button>
 
     @* TODO search by presing enter *@
-    <div class="d-flex align-items-center w-25">
-        <input @bind="_searchQuery" placeholder="Search..." class="form-control form-control-sm mr-2"/>
-        <button @onclick="ApplySearch" class="btn btn-sm btn-info">Search</button>
+    <div class="d-flex align-items-center w-25 justify-content-end">
+        @* <input @bind="_searchQuery" placeholder="Search..." class="form-control form-control-sm mr-2"/> *@
+        @* <button @onclick="ApplySearch" class="btn btn-sm btn-info">Search</button> *@
     </div>
 </div>
 
@@ -14,20 +14,43 @@
 {
     <div class="card col-12">
         <div class="card-body ">
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-sm btn-outline-secondary" @onclick="DownloadCsv"><i class="fa fa-download" style="padding-right: 5px"></i> CSV</button>
-            </div>
-            <TableDataGrid TEntity="TEntity"
-                           Data="_data"
-                           CurrentPage="_currentPage"
-                           TotalPages="TotalPages"
-                           OnPageChanged="LoadTableData"
-                           OnEdit="EditItem"
-                           OnDelete="DeleteItem"/>
+            @if (_selectedRecords.Any())
+            {
+                <div class="d-flex pb-3 justify-content-end">
+                    <button class="btn btn-outline-secondary btn-sm m-1 p-2" @onclick="DownloadCsv"><i class="fa fa-download" style="padding-right: 5px"></i> CSV</button>
+                    <button class="btn btn-outline-danger btn-sm m-1 p-2" @onclick="async () => await DeleteSelectedItems()">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>
+            }
+            <DataGrid TItem="TEntity"
+                      Data="_dataBlazorise"
+                      ReadData="@OnReadData"
+                      TotalItems="TotalCount"
+                      SelectionMode="DataGridSelectionMode.Multiple"
+                      @bind-SelectedRows="_selectedRecords"
+                      PageSize="10"
+                      ShowPager
+                      Responsive
+                      Filterable
+                      FilterMethod="DataGridFilterMethod.StartsWith">
+                <DataGridMultiSelectColumn TItem="TEntity" Width="30px"></DataGridMultiSelectColumn>
+                @foreach (var prop in _data.FirstOrDefault().GetPropertiesWithoutRelations().Take(10))
+                {
+                    <DataGridColumn Field="@prop.Name" Caption="@prop.Name" Sortable="true" Editable="false"/>
+                }
+                <DataGridColumn TItem="TEntity" Caption="Actions" Filterable="false">
+                    <DisplayTemplate>
+                        <span class="btn btn-outline-secondary btn-sm m-1 p-2" @onclick="(e) => EditSelectedRow(e, context)">
+                            <i class="fa fa-edit"></i>
+                        </span>
+                    </DisplayTemplate>
+                </DataGridColumn>
+            </DataGrid>
         </div>
     </div>
 
-    <EditEntityDialog TEntity="TEntity" EntityName="@_entityName" SelectedEntity="_selectedItem" @bind-IsOpen="_isEditModalOpen" OnSave="OnEditModalSave"/>
+    <EditEntityDialog TEntity="TEntity" EntityName="@_entityName" SelectedEntity="_selectedRow" @bind-IsOpen="_isEditModalOpen" OnSave="OnEditModalSave"/>
 }
 else
 {
