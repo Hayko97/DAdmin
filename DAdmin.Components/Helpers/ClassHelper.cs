@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text;
+using Microsoft.AspNetCore.Components;
 
 namespace DAdmin.Components.Helpers;
 
@@ -121,5 +122,26 @@ public static class ClassHelper
                type == typeof(float) ||
                type == typeof(double) ||
                type == typeof(decimal);
+    }
+    
+    public static Dictionary<string, object> ExtractParameters<TComponent>(TComponent component) 
+        where TComponent : class
+    {
+        var parameters = new Dictionary<string, object>();
+
+        foreach (var property in typeof(TComponent).GetProperties(BindingFlags.Public | BindingFlags.Instance))
+        {
+            var parameterAttribute = property.GetCustomAttribute(typeof(ParameterAttribute));
+            if (parameterAttribute != null)
+            {
+                var value = property.GetValue(component);
+                if (value != null)
+                {
+                    parameters.Add(property.Name, value);
+                }
+            }
+        }
+
+        return parameters;
     }
 }

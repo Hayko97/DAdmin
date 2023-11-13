@@ -1,6 +1,6 @@
 using DAdmin.Components.Components;
 using DAdmin.Components.Components.Charts.ViewModels;
-using DAdmin.Components.Components.ViewModels;
+using DAdmin.Components.Components.Menus.ViewModels;
 using DAdmin.Components.Extensions;
 using DAdmin.Components.Helpers;
 using Microsoft.AspNetCore.Components;
@@ -18,7 +18,7 @@ public partial class AdminPanel
     private MenuItem _selectedMenuItem;
     [Inject] public DbContext DbContext { get; set; }
 
-    [Parameter] public IEnumerable<IChart> Charts { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,47 +30,10 @@ public partial class AdminPanel
     private async Task OnSelectedItem(MenuItem menuItem)
     {
         _selectedMenuItem = menuItem;
-        switch (menuItem.MenuItemType)
-        {
-            case MenuItemType.Dashboard:
-                await ShowDashboard(menuItem);
-                break;
-            case MenuItemType.Entity:
-                await ShowTableData(menuItem.Name);
-                break;
-        }
     }
-
-    private Task ShowTableData(string name)
+    
+    public void AddMenuItem(MenuItem menuItem) 
     {
-        var entityType = DbContext.GetTypeFromTableName(name);
-
-        if (entityType != null)
-        {
-            _renderedContent = builder =>
-            {
-                builder.OpenComponent(0, typeof(TableData<>).MakeGenericType(entityType));
-                builder.AddAttribute(1, "ResourceName", name);
-                builder.CloseComponent();
-            };
-
-            StateHasChanged();
-        }
-
-        return Task.CompletedTask;
-    }
-
-    private Task ShowDashboard(MenuItem menuItem)
-    {
-        _renderedContent = builder =>
-        {
-            builder.OpenComponent(0, typeof(Dashboard));
-            builder.AddAttribute(1, "Charts", Charts);
-            builder.CloseComponent();
-        };
-
-        StateHasChanged();
-
-        return Task.CompletedTask;
+        // Method that child can call
     }
 }

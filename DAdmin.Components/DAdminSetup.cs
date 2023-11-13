@@ -3,6 +3,7 @@ using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
 using DAdmin.Components.Services;
 using DAdmin.Components.Services.Interfaces;
+using DAdmin.Components.States;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +17,9 @@ public static class DAdminSetup
         services.AddTransient(typeof(IDataService<>), typeof(DataService<>));
         services.AddTransient<IDbInfoService, DbInfoService>();
         services.AddTransient(typeof(IDataMapperService<>), typeof(DataMapperService<>));
+
+        //States
+        services.AddSingleton<MenuState>();
 
         services.AddScoped(typeof(DbContext), provider => provider.GetRequiredService<TContext>());
 

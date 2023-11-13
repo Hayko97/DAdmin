@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text;
 using Blazorise.DataGrid;
+using DAdmin.Components.Components.Menus.ViewModels;
 using DAdmin.Components.Helpers;
 using DAdmin.Components.Services;
 using DAdmin.Components.Services.Interfaces;
@@ -30,11 +31,12 @@ namespace DAdmin.Components.Components
 
         private DataGridReadDataEventArgs<TEntity> _dataGridReadDataEventArgs;
 
-        private int TotalPages { get; set; }
         private int TotalCount { get; set; }
 
         [Parameter] public string ResourceName { get; set; }
         [Parameter] public Func<IQueryable<TEntity>, IQueryable<TEntity>> QueryLogic { get; set; }
+
+        [CascadingParameter] public AdminPanel? AdminPanel { get; set; }
 
         [Inject] private IJSRuntime JSRuntime { get; set; }
         [Inject] private IDataService<TEntity> DataService { get; set; }
@@ -42,6 +44,26 @@ namespace DAdmin.Components.Components
         #endregion
 
         #region Lifecycle Methods
+
+        protected override Task OnInitializedAsync()
+        {
+            if (AdminPanel != null)
+            {
+                var parameters = ClassHelper.ExtractParameters(this);
+                
+                AdminPanel.AddMenuItem(new MenuItem()
+                {
+                    Type = MenuType.Resources,
+                    Name = ResourceName,
+                    ComponentType = this.GetType(),
+                    Parameters = parameters,
+                    SubItems = null
+                });
+                
+            }
+
+            return Task.CompletedTask;
+        }
 
         protected override async Task OnParametersSetAsync()
         {
@@ -68,7 +90,6 @@ namespace DAdmin.Components.Components
         {
             var response = await DataService.GetPaginatedAsync(QueryLogic, 1);
             _data = response.Data;
-            TotalPages = response.TotalPages;
             TotalCount = response.TotalCount;
             StateHasChanged();
         }

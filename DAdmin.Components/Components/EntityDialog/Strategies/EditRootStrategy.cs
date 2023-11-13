@@ -47,7 +47,7 @@ public class EditRootStrategy<TEntity> : IEntityDialogStrategy where TEntity : c
     {
         if (_entity == null)
         {
-            throw new ArgumentException("No Selected Entity");
+            throw new ArgumentException("No Selected Resources");
         }
         
         if (_dialog.RootTableResource == null ||

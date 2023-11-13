@@ -145,7 +145,7 @@ namespace DAdmin.Components.Components
 
         private async Task CreateRelationEntity(ResourceProperty propertyInfo)
         {
-            EntityName = propertyInfo.TablePropertyInfo.PropertyType.Name; //Name of Model class type
+            EntityName = propertyInfo.TablePropertyInfo.PropertyType.Name; //Type of Model class type
 
             await _entityDialogStrategy.MapStringValuesToEntity();
             if (ObjectTableResource != null)
