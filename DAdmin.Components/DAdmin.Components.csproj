@@ -928,6 +928,7 @@
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Pages\CreateEntity.razor" />
+      <_ContentIncludedByDefault Remove="Components\TableData\TableDataGrid.razor" />
     </ItemGroup>
 
     <ItemGroup>

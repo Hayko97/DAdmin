@@ -1,10 +1,10 @@
 using System.Reflection;
 using DAdmin.Components.Extensions;
 using DAdmin.Components.Helpers;
-using DAdmin.Components.Services.Interfaces;
+using DAdmin.Components.Services.DbServices.Interfaces;
 using DAdmin.Shared.DTO;
 
-namespace DAdmin.Components.Services;
+namespace DAdmin.Components.Services.DbServices;
 
 public class DataMapperService<TEntity> : DbService, IDataMapperService<TEntity> where TEntity : class
 {

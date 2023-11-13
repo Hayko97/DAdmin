@@ -5,15 +5,17 @@ namespace DAdmin.Components.Components.Menus.ViewModels;
 public class MenuItem
 {
     public string Name { get; set; }
+
+    public string IconClass { get; set; }
     public MenuType Type { get; set; }
 
-    public Type ComponentType { get; set; }
-
-    public List<MenuItem>? SubItems { get; set; }
+    public Type? ComponentType { get; set; }
 
     public Dictionary<string, object> Parameters { get; set; } = new();
 
-    private RenderFragment RenderContent() => builder =>
+    public List<MenuItem>? SubItems { get; set; }
+
+    public RenderFragment RenderContent() => builder =>
     {
         if (ComponentType != null)
         {

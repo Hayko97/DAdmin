@@ -1,6 +1,6 @@
 using DAdmin.Components.Components.Charts.ViewModels;
 using DAdmin.Components.Components.Menus.ViewModels;
-using DAdmin.Components.Services.Interfaces;
+using DAdmin.Components.Services.DbServices.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,13 +8,14 @@ namespace DAdmin.Components.Components.Menus;
 
 public partial class Menu
 {
-    private MenuItem _selectedItem;
+    private MenuItem _selectedItem = new();
+
     private IEnumerable<string> _entityNames;
     [Inject] public IDbInfoService DbInfoService { get; set; }
     [Parameter] public EventCallback<MenuItem> OnSelectedItem { get; set; }
-    
-    [Parameter] public List<MenuItem> MenuItems { get; set; }
-    
+
+    [Parameter] public Dictionary<MenuType, MenuItem> MenuItems { get; set; }
+
     protected override Task OnInitializedAsync()
     {
         _entityNames = DbInfoService.GetEntityNames();

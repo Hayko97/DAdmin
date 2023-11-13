@@ -26,7 +26,12 @@ public class MenuState : INotifyPropertyChanged
 
     public Task AddMenuItemAsync(MenuItem item)
     {
-        MenuItems.Add(item.Type, item);
+        if (MenuItems[item.Type].SubItems == null)
+        {
+            MenuItems[item.Type].SubItems = new List<MenuItem>();
+        }
+
+        MenuItems[item.Type].SubItems?.Add(item);
         OnPropertyChanged(nameof(MenuItems));
 
         return Task.CompletedTask;

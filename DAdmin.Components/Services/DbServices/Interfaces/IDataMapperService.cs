@@ -1,6 +1,6 @@
 using DAdmin.Shared.DTO;
 
-namespace DAdmin.Components.Services.Interfaces;
+namespace DAdmin.Components.Services.DbServices.Interfaces;
 
 public interface IDataMapperService<TEntity> where TEntity : class
 {

@@ -1,22 +1,15 @@
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Blazorise;
 using Blazorise.DataGrid;
 using Blazorise.Utilities;
-using DAdmin.Components.Components.Charts.ViewModels;
 using DAdmin.Components.Extensions;
-using DAdmin.Components.Helpers;
-using DAdmin.Components.Services.Interfaces;
+using DAdmin.Components.Services.DbServices.Interfaces;
 using DAdmin.Shared.DTO;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualBasic;
 
-namespace DAdmin.Components.Services;
+namespace DAdmin.Components.Services.DbServices;
 
 //TODO DRY and KISS Violation FIX
 public class DataService<TEntity> : DbService, IDataService<TEntity> where TEntity : class

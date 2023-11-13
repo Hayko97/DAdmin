@@ -2,7 +2,7 @@ using System.Reflection;
 using DAdmin.Components.Builders;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace DAdmin.Components.Services.Interfaces;
+namespace DAdmin.Components.Services.DbServices.Interfaces;
 
 public interface IDbInfoService
 {

@@ -6,7 +6,7 @@ using DAdmin.Components.Components.EntityDialog.Strategies;
 using DAdmin.Components.Extensions;
 using Microsoft.AspNetCore.Components;
 using DAdmin.Components.Helpers;
-using DAdmin.Components.Services.Interfaces;
+using DAdmin.Components.Services.DbServices.Interfaces;
 using DAdmin.Shared.DTO;
 using Microsoft.JSInterop;
 

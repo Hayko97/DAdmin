@@ -1,8 +1,7 @@
-using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DAdmin.Components.Services;
+namespace DAdmin.Components.Services.DbServices;
 
 public class DbService : IDisposable
 {

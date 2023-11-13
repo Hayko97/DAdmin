@@ -1,7 +1,7 @@
 using Blazorise.DataGrid;
 using DAdmin.Shared.DTO;
 
-namespace DAdmin.Components.Services.Interfaces;
+namespace DAdmin.Components.Services.DbServices.Interfaces;
 
 public interface IDataService<TEntity> where TEntity : class
 {

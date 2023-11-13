@@ -3,8 +3,8 @@ using System.Text;
 using Blazorise.DataGrid;
 using DAdmin.Components.Components.Menus.ViewModels;
 using DAdmin.Components.Helpers;
-using DAdmin.Components.Services;
-using DAdmin.Components.Services.Interfaces;
+using DAdmin.Components.Services.DbServices.Interfaces;
+using DAdmin.Components.States;
 using DAdmin.Shared.DTO;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -39,30 +39,28 @@ namespace DAdmin.Components.Components
         [CascadingParameter] public AdminPanel? AdminPanel { get; set; }
 
         [Inject] private IJSRuntime JSRuntime { get; set; }
+        
+        [Inject] private MenuState MenuState { get; set; }
         [Inject] private IDataService<TEntity> DataService { get; set; }
 
         #endregion
 
         #region Lifecycle Methods
 
-        protected override Task OnInitializedAsync()
+        protected override async Task OnInitializedAsync()
         {
             if (AdminPanel != null)
             {
                 var parameters = ClassHelper.ExtractParameters(this);
                 
-                AdminPanel.AddMenuItem(new MenuItem()
+                await MenuState.AddMenuItemAsync(new MenuItem
                 {
                     Type = MenuType.Resources,
                     Name = ResourceName,
                     ComponentType = this.GetType(),
                     Parameters = parameters,
-                    SubItems = null
                 });
-                
             }
-
-            return Task.CompletedTask;
         }
 
         protected override async Task OnParametersSetAsync()

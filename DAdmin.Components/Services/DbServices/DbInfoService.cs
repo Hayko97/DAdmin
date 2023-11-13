@@ -1,10 +1,9 @@
 using System.Reflection;
 using DAdmin.Components.Builders;
-using DAdmin.Components.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using DAdmin.Components.Services.DbServices.Interfaces;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace DAdmin.Components.Services;
+namespace DAdmin.Components.Services.DbServices;
 
 public class DbInfoService : DbService, IDbInfoService
 {

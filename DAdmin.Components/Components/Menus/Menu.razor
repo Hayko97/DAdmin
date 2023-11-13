@@ -1,13 +1,13 @@
 <nav class="sidebar sidebar-offcanvas">
     <ul class="nav">
-        @foreach (var menuItem in MenuItems)
+        @foreach (var menuItem in MenuItems.Values)
         {
-            @if (menuItem.SubItems.Any())
+            @if (menuItem.SubItems != null && menuItem.SubItems.Any())
             {
                 <li class="nav-item">
                     <a class="nav-link">
-                        <i class="mdi mdi-grid-large menu-icon"></i>
-                        <span class="menu-title">@menuItem.Type</span>
+                        <i class="@menuItem.IconClass p-2"></i>
+                        <span class="menu-title">@menuItem.Name</span>
                         <i class="menu-arrow"></i>
                     </a>
                     <div class="collapse show">
@@ -32,8 +32,8 @@
             {
                 <li class="nav-item">
                     <a class="nav-link" href="#" @onclick="() => SelectItem(menuItem)">
-                        <i class="mdi mdi-home menu-icon"></i>
-                        <span class="menu-title">@menuItem.Type</span>
+                        <i class="@menuItem.IconClass p-2"></i>
+                        <span class="menu-title">@menuItem.Name</span>
                     </a>
                 </li>
             }

@@ -1,8 +1,10 @@
 using System.Linq.Expressions;
 using DAdmin.Components.Components.Charts.Enums;
 using DAdmin.Components.Components.Charts.ViewModels;
+using DAdmin.Components.Components.Menus.ViewModels;
 using DAdmin.Components.Helpers;
-using DAdmin.Components.Services.Interfaces;
+using DAdmin.Components.Services.DbServices.Interfaces;
+using DAdmin.Components.States;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
@@ -20,8 +22,11 @@ public partial class TimeChart<TEntity>
     [Parameter] public ChartTimeInterval TimeInterval { get; set; } = ChartTimeInterval.Daily;
     [Parameter] public AggregationType AggregationType { get; set; } = AggregationType.Count;
 
+    [CascadingParameter] public AdminPanel? AdminPanel { get; set; }
+
     [Inject] private IJSRuntime JSRuntime { get; set; }
     [Inject] private IDataService<TEntity> DataService { get; set; }
+    [Inject] private MenuState MenuState { get; set; }
 
     private string canvasId = $"chartCanvas-{Guid.NewGuid()}";
     private bool isChartDataReady = false;
@@ -35,6 +40,19 @@ public partial class TimeChart<TEntity>
             var entities = await query.ToListAsync();
             chartData = ProcessChartData(entities);
             isChartDataReady = true;
+        }
+
+        if (AdminPanel != null)
+        {
+            var parameters = ClassHelper.ExtractParameters(this);
+
+            await MenuState.AddMenuItemAsync(new MenuItem
+            {
+                Type = MenuType.Charts,
+                Name = Name,
+                ComponentType = this.GetType(),
+                Parameters = parameters,
+            });
         }
     }
 
