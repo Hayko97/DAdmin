@@ -18,7 +18,7 @@ public partial class AdminPanel
     [Inject] public IMenuService MenuService { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public bool UseEntitiesAsResource { get; set; }
+    [Parameter] public bool UseContextEntities { get; set; }
 
     private bool _stateInitialized { get; set; }
 
@@ -30,7 +30,7 @@ public partial class AdminPanel
         {
             menuItems = await MenuService.AddDefaultMenuItems(menuItems);
         }
-        else if (UseEntitiesAsResource)
+        else if (UseContextEntities)
         {
             menuItems = await MenuService.AddEntitiesToResources(menuItems);
         }
