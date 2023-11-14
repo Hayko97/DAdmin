@@ -24,6 +24,7 @@
                     </button>
                 </div>
             }
+            @*Make PageSize dynamicly*@
             <DataGrid TItem="TEntity"
                       Data="_dataBlazorise"
                       ReadData="@OnReadData"
@@ -35,21 +36,23 @@
                       Responsive
                       Filterable
                       FilterMethod="DataGridFilterMethod.StartsWith">
-                <DataGridAggregate>
-                    @AggregateColumns
-                </DataGridAggregate>
-                <DataGridMultiSelectColumn TItem="TEntity" Width="30px"></DataGridMultiSelectColumn>
-                @foreach (var prop in _data.FirstOrDefault().GetPropertiesWithoutRelations().Take(10))
-                {
-                    <DataGridColumn Field="@prop.Name" Caption="@prop.Name" Sortable="true" Editable="false"/>
-                }
-                <DataGridColumn TItem="TEntity" Caption="Actions" Filterable="false">
-                    <DisplayTemplate>
-                        <span class="btn btn-outline-secondary btn-sm m-1 p-2" @onclick="(e) => EditSelectedRow(e, context)">
-                            <i class="fa fa-edit"></i>
-                        </span>
-                    </DisplayTemplate>
-                </DataGridColumn>
+                <DataGridAggregates>
+                    @ChildContent
+                </DataGridAggregates>
+                <DataGridColumns>
+                    <DataGridMultiSelectColumn TItem="TEntity" Width="30px"></DataGridMultiSelectColumn>
+                    @foreach (var prop in _data.FirstOrDefault().GetPropertiesWithoutRelations().Where(x => !ExcludedProperties.Any(c => c == x.Name)))
+                    {
+                        <DataGridColumn Field="@prop.Name" Caption="@prop.Name" Sortable="true" Editable="false"/>
+                    }
+                    <DataGridColumn TItem="TEntity" Caption="Actions" Filterable="false">
+                        <DisplayTemplate>
+                            <span class="btn btn-outline-secondary btn-sm m-1 p-2" @onclick="(e) => EditSelectedRow(e, context)">
+                                <i class="fa fa-edit"></i>
+                            </span>
+                        </DisplayTemplate>
+                    </DataGridColumn>
+                </DataGridColumns>
             </DataGrid>
         </div>
     </div>

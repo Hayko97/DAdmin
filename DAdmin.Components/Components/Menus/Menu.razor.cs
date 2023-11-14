@@ -8,25 +8,24 @@ namespace DAdmin.Components.Components.Menus;
 
 public partial class Menu
 {
-    private MenuItem _selectedItem = new();
+    private MenuItemModel _selectedItemModel = new();
 
-    private IEnumerable<string> _entityNames;
     [Inject] public IDbInfoService DbInfoService { get; set; }
-    [Parameter] public EventCallback<MenuItem> OnSelectedItem { get; set; }
+    [Parameter] public EventCallback<MenuItemModel> OnSelectedItem { get; set; }
 
-    [Parameter] public Dictionary<MenuType, MenuItem> MenuItems { get; set; }
+    [Parameter] public Dictionary<MenuSection, MenuItemModel> MenuItems { get; set; }
+    
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
     protected override Task OnInitializedAsync()
     {
-        _entityNames = DbInfoService.GetEntityNames();
-
         return Task.CompletedTask;
     }
 
-    private async Task SelectItem(MenuItem selectedItem)
+    private async Task SelectItem(MenuItemModel selectedItemModel)
     {
-        _selectedItem = selectedItem;
-        await OnSelectedItem.InvokeAsync(selectedItem);
+        _selectedItemModel = selectedItemModel;
+        await OnSelectedItem.InvokeAsync(selectedItemModel);
         StateHasChanged();
     }
 }

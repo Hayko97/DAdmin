@@ -32,7 +32,7 @@ public class CreateRootStrategy<TEntity> : IEntityDialogStrategy where TEntity :
         await _dialog.CloseModal();
     }
 
-    public async Task<IEnumerable<ResourceProperty>> GetProperties()
+    public async Task<IEnumerable<DataProperty>> GetProperties()
     {
         if (_dialog.RootEntityResource == null ||
             !_dialog.RootEntityResource.Properties.Any(x =>

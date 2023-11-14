@@ -44,7 +44,7 @@ public class CreateObjectStrategy<TEntity> : IEntityDialogStrategy where TEntity
         }
     }
 
-    public Task<IEnumerable<ResourceProperty>> GetProperties()
+    public Task<IEnumerable<DataProperty>> GetProperties()
     {
         return Task.FromResult(_dialog.CurrentChildResource.Properties);
     }

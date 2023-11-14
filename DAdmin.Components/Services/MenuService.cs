@@ -14,7 +14,7 @@ public class MenuService : IMenuService
         _dbInfoService = dbInfoService;
     }
 
-    public async Task<Dictionary<MenuType, MenuItem>> AddDefaultMenuItems(Dictionary<MenuType, MenuItem> menuItems)
+    public async Task<Dictionary<MenuSection, MenuItemModel>> AddDefaultMenuItems(Dictionary<MenuSection, MenuItemModel> menuItems)
     {
         menuItems = await AddEntitiesToResources(menuItems);
 
@@ -22,15 +22,15 @@ public class MenuService : IMenuService
         return menuItems;
     }
 
-    public Task<Dictionary<MenuType, MenuItem>> AddEntitiesToResources(Dictionary<MenuType, MenuItem> menuItems)
+    public Task<Dictionary<MenuSection, MenuItemModel>> AddEntitiesToResources(Dictionary<MenuSection, MenuItemModel> menuItems)
     {
         var entityNames = _dbInfoService.GetEntityTypes();
         foreach (var item in entityNames)
         {
-            menuItems[MenuType.Resources].SubItems?.Add(new MenuItem
+            menuItems[MenuSection.Resources].SubItems?.Add(new MenuItemModel
             {
                 Name = item.ClrType.Name,
-                Type = MenuType.Resources,
+                Section = MenuSection.Resources,
                 ComponentType = typeof(DataResource<>).MakeGenericType(item.ClrType),
                 Parameters = new Dictionary<string, object>()
                 {
@@ -43,40 +43,40 @@ public class MenuService : IMenuService
         return Task.FromResult(menuItems);
     }
 
-    public Dictionary<MenuType, MenuItem> GetRootMenuItems()
+    public Dictionary<MenuSection, MenuItemModel> GetRootMenuItems()
     {
-        var menuItems = new Dictionary<MenuType, MenuItem>();
+        var menuItems = new Dictionary<MenuSection, MenuItemModel>();
 
-        menuItems[MenuType.Dashboard] = new MenuItem()
+        menuItems[MenuSection.Dashboard] = new MenuItemModel()
         {
-            Name = MenuType.Dashboard.ToString(),
+            Name = MenuSection.Dashboard.ToString(),
             IconClass = "fa fa-home",
             ComponentType = typeof(Dashboard),
             SubItems = null
         };
 
-        menuItems[MenuType.Resources] = new MenuItem()
+        menuItems[MenuSection.Resources] = new MenuItemModel()
         {
-            Name = MenuType.Resources.ToString(),
+            Name = MenuSection.Resources.ToString(),
             ComponentType = null,
             IconClass = "fa fa-table",
-            SubItems = new List<MenuItem>(),
+            SubItems = new List<MenuItemModel>(),
         };
 
-        menuItems[MenuType.Charts] = new MenuItem()
+        menuItems[MenuSection.Charts] = new MenuItemModel()
         {
-            Name = MenuType.Charts.ToString(),
+            Name = MenuSection.Charts.ToString(),
             ComponentType = null,
             IconClass = "fa fa-bar-chart",
-            SubItems = new List<MenuItem>(),
+            SubItems = new List<MenuItemModel>(),
         };
 
-        menuItems[MenuType.Stats] = new MenuItem()
+        menuItems[MenuSection.Stats] = new MenuItemModel()
         {
-            Name = MenuType.Stats.ToString(),
+            Name = MenuSection.Stats.ToString(),
             ComponentType = null,
             IconClass = "far fa-calendar-alt",
-            SubItems = new List<MenuItem>(),
+            SubItems = new List<MenuItemModel>(),
         };
 
         return menuItems;

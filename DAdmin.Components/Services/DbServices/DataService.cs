@@ -48,7 +48,7 @@ public class DataService<TEntity> : DbService, IDataService<TEntity> where TEnti
             {
                 EntityModel = item,
                 Properties = item.GetType().GetProperties().Select(prop =>
-                    new ResourceProperty
+                    new DataProperty
                     {
                         EntityPropertyInfo = prop,
                         Name = prop.Name,
@@ -167,7 +167,7 @@ public class DataService<TEntity> : DbService, IDataService<TEntity> where TEnti
             {
                 EntityModel = item,
                 Properties = item.GetType().GetProperties().Select(prop =>
-                    new ResourceProperty
+                    new DataProperty
                     {
                         EntityPropertyInfo = prop,
                         Name = prop.Name,

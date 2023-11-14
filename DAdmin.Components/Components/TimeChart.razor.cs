@@ -46,9 +46,9 @@ public partial class TimeChart<TEntity>
         {
             var parameters = ClassHelper.ExtractParameters(this);
 
-            await MenuState.AddMenuItemAsync(new MenuItem
+            await MenuState.AddMenuItemAsync(new MenuItemModel
             {
-                Type = MenuType.Charts,
+                Section = MenuSection.Charts,
                 Name = Name,
                 ComponentType = this.GetType(),
                 Parameters = parameters,

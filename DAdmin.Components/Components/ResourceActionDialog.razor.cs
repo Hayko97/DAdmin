@@ -32,7 +32,7 @@ namespace DAdmin.Components.Components
         #endregion
 
         #region Private Fields
-        private IEnumerable<ResourceProperty> _properties;
+        private IEnumerable<DataProperty> _properties;
         private IEntityDialogStrategy _entityDialogStrategy;
         private Dictionary<string, string> _entityNames = new();
         #endregion
@@ -153,9 +153,9 @@ namespace DAdmin.Components.Components
             StateHasChanged();
         }
 
-        private async Task CreateRelationEntity(ResourceProperty propertyInfo)
+        private async Task CreateRelationEntity(DataProperty propertyInfo)
         {
-            EntityName = propertyInfo.EntityPropertyInfo.PropertyType.Name; //Type of Model class type
+            EntityName = propertyInfo.EntityPropertyInfo.PropertyType.Name; //Section of Model class type
 
             await _entityDialogStrategy.MapStringValuesToEntity();
             if (CurrentChildResource != null)

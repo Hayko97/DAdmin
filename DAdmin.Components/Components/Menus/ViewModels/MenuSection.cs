@@ -1,6 +1,6 @@
 namespace DAdmin.Components.Components.Menus.ViewModels;
 
-public enum MenuType
+public enum MenuSection
 {
     Dashboard,
     Charts,

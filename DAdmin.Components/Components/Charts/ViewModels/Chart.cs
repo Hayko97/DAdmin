@@ -18,7 +18,7 @@ public class Chart<TEntity> : IChart where TEntity : class
     {
         builder.OpenComponent<TimeChart<TEntity>>(0);
         builder.AddAttribute(1, "ChartType", ChartType);
-        builder.AddAttribute(2, "Type", Name);
+        builder.AddAttribute(2, "Section", Name);
         builder.AddAttribute(3, "QueryLogic", QueryLogic);
         builder.AddAttribute(4, "LabelSelector", LabelSelector);
         builder.AddAttribute(5, "AggregationSelector", AggregationSelector);

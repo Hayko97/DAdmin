@@ -6,7 +6,7 @@ public interface IEntityDialogStrategy
 {
     string EntityName { get; set; }
     Task Save();
-    Task<IEnumerable<ResourceProperty>> GetProperties();
+    Task<IEnumerable<DataProperty>> GetProperties();
 
     Task MapStringValuesToEntity();
 }

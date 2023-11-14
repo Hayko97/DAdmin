@@ -2,19 +2,16 @@ using Microsoft.AspNetCore.Components;
 
 namespace DAdmin.Components.Components.Menus.ViewModels;
 
-public class MenuItem
+public class MenuItemModel
 {
     public string Name { get; set; }
-
     public string IconClass { get; set; }
-    public MenuType Type { get; set; }
-
+    public MenuSection Section { get; set; }
     public Type? ComponentType { get; set; }
-
     public Dictionary<string, object> Parameters { get; set; } = new();
-
-    public List<MenuItem>? SubItems { get; set; }
-
+    public List<MenuItemModel>? SubItems { get; set; }
+    public RenderFragment Content { get; set; }
+    
     public RenderFragment RenderContent() => builder =>
     {
         if (ComponentType != null)

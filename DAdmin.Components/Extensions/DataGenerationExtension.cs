@@ -5,7 +5,7 @@ namespace DAdmin.Components.Extensions;
 
 public static class DataGenerationExtension
 {
-    public static Task<Dictionary<string, string>> GenerateTestData(this IEnumerable<ResourceProperty> properties)
+    public static Task<Dictionary<string, string>> GenerateTestData(this IEnumerable<DataProperty> properties)
     {
         var data = new Dictionary<string, string>();
 

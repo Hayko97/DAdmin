@@ -68,7 +68,7 @@ public class DataMapperService<TEntity> : DbService, IDataMapperService<TEntity>
             )).ToList();
     }
 
-    private ResourceProperty CreateEntityProperty(PropertyInfo prop, object entity, PropertyInfo[] properties)
+    private DataProperty CreateEntityProperty(PropertyInfo prop, object entity, PropertyInfo[] properties)
     {
         bool isNavigation = IsNavigationProperty(entity.GetType(), prop);
         var relatedEntities = isNavigation ? GetRelatedEntities(prop) : null;
@@ -76,7 +76,7 @@ public class DataMapperService<TEntity> : DbService, IDataMapperService<TEntity>
         object propertyValue = prop.GetValue(entity);
         bool isNullOrDefault = ClassHelper.IsNullOrDefaultValue(prop, propertyValue);
 
-        var entityProperty = new ResourceProperty
+        var entityProperty = new DataProperty
         {
             EntityPropertyInfo = prop,
             Name = prop.Name,

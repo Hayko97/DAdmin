@@ -2,7 +2,7 @@ using System.Reflection;
 
 namespace DAdmin.Shared.DTO;
 
-public record ResourceProperty
+public record DataProperty
 {
     public PropertyInfo EntityPropertyInfo { get; set; }
     public bool IsKey { get; set; }

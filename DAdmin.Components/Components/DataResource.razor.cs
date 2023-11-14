@@ -22,7 +22,6 @@ namespace DAdmin.Components.Components
         private string _previousResourceName;
         private string _entityName;
 
-
         private List<DAdmin.Shared.DTO.DataResource<TEntity>> _data = new();
         private List<TEntity> _dataBlazorise = new();
 
@@ -35,9 +34,9 @@ namespace DAdmin.Components.Components
 
         [Parameter] public string ResourceName { get; set; }
         [Parameter] public Func<IQueryable<TEntity>, IQueryable<TEntity>> QueryLogic { get; set; }
-        [Parameter] public RenderFragment AggregateColumns { get; set; }
 
-        [CascadingParameter] public AdminPanel? AdminPanel { get; set; }
+        [Parameter] public string[] ExcludedProperties { get; set; }
+        [Parameter] public RenderFragment ChildContent { get; set; }
 
         [Inject] private IJSRuntime JSRuntime { get; set; }
         [Inject] private MenuState MenuState { get; set; }
@@ -46,22 +45,6 @@ namespace DAdmin.Components.Components
         #endregion
 
         #region Lifecycle Methods
-
-        protected override async Task OnInitializedAsync()
-        {
-            if (AdminPanel != null)
-            {
-                var parameters = ClassHelper.ExtractParameters(this);
-
-                await MenuState.AddMenuItemAsync(new MenuItem
-                {
-                    Type = MenuType.Resources,
-                    Name = ResourceName,
-                    ComponentType = this.GetType(),
-                    Parameters = parameters,
-                });
-            }
-        }
 
         protected override async Task OnParametersSetAsync()
         {
@@ -114,8 +97,6 @@ namespace DAdmin.Components.Components
                     await JSRuntime.InvokeVoidAsync("alert", ex.Message);
                     throw;
                 }
-                // this can be call to anything, in this case we're calling a fictional api
-                //var response = await Http.GetJsonAsync<Employee[]>( $"some-api/employees?page={e.Page}&pageSize={e.PageSize}" );
             }
         }
 

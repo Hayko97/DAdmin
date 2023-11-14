@@ -43,7 +43,7 @@ public class EditRootStrategy<TEntity> : IEntityDialogStrategy where TEntity : c
         await _dialog.CloseModal();
     }
 
-    public async Task<IEnumerable<ResourceProperty>> GetProperties()
+    public async Task<IEnumerable<DataProperty>> GetProperties()
     {
         if (_entity == null)
         {

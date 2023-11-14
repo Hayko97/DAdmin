@@ -18,7 +18,6 @@
                     <button type="button" class="btn-close" @onclick="CloseModal">
                     </button>
                 </div>
-                <form>
                     <div class="modal-body">
                         @if (CurrentChildResource != null || ChildDataResourcesStack.Any())
                         {
@@ -89,7 +88,6 @@
                         <button class="btn btn-success" @onclick="Save">Save</button>
                         <button type="submit" class="btn btn-secondary" @onclick="CloseModal">Close</button>
                     </div>
-                </form>
             </div>
         </div>
     </div>

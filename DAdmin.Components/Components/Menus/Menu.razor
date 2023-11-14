@@ -15,10 +15,11 @@
 
                             @foreach (var subItem in menuItem.SubItems)
                             {
-                                var isSelected = subItem.Name == _selectedItem.Name;
+                                var isSelected = subItem.Name == _selectedItemModel.Name;
                                 <li class="nav-item @(isSelected ? "active" : "")">
                                     <a href="#" class="nav-link"
                                        @onclick="() => SelectItem(subItem)">
+                                        <i class="@menuItem.IconClass " style="padding-right: 5px"></i>
                                         @subItem.Name
                                     </a>
                                 </li>
@@ -32,7 +33,7 @@
             {
                 <li class="nav-item">
                     <a class="nav-link" href="#" @onclick="() => SelectItem(menuItem)">
-                        <i class="@menuItem.IconClass p-2"></i>
+                        <i class="@menuItem.IconClass p-1"></i>
                         <span class="menu-title">@menuItem.Name</span>
                     </a>
                 </li>

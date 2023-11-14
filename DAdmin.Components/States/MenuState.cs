@@ -5,9 +5,9 @@ namespace DAdmin.Components.States;
 
 public class MenuState : INotifyPropertyChanged
 {
-    private Dictionary<MenuType, MenuItem> _menuItems;
+    private Dictionary<MenuSection, MenuItemModel> _menuItems;
 
-    public Dictionary<MenuType, MenuItem> MenuItems
+    public Dictionary<MenuSection, MenuItemModel> MenuItems
     {
         get => _menuItems;
         set
@@ -24,14 +24,14 @@ public class MenuState : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public Task AddMenuItemAsync(MenuItem item)
+    public Task AddMenuItemAsync(MenuItemModel itemModel)
     {
-        if (MenuItems[item.Type].SubItems == null)
+        if (MenuItems[itemModel.Section].SubItems == null)
         {
-            MenuItems[item.Type].SubItems = new List<MenuItem>();
+            MenuItems[itemModel.Section].SubItems = new List<MenuItemModel>();
         }
 
-        MenuItems[item.Type].SubItems?.Add(item);
+        MenuItems[itemModel.Section].SubItems?.Add(itemModel);
         OnPropertyChanged(nameof(MenuItems));
 
         return Task.CompletedTask;

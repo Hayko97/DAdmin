@@ -18,27 +18,38 @@ public partial class AdminPanel
     [Inject] public IMenuService MenuService { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
-
     [Parameter] public bool UseEntitiesAsResource { get; set; }
+
+    private bool _stateInitialized { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Dictionary<MenuType, MenuItem> menuItems = MenuService.GetRootMenuItems();
+        Dictionary<MenuSection, MenuItemModel> menuItems = MenuService.GetRootMenuItems();
 
         if (ChildContent == null)
         {
-            MenuState.MenuItems = await MenuService.AddDefaultMenuItems(menuItems);
+            menuItems = await MenuService.AddDefaultMenuItems(menuItems);
         }
         else if (UseEntitiesAsResource)
         {
-            MenuState.MenuItems = await MenuService.AddEntitiesToResources(menuItems);
+            menuItems = await MenuService.AddEntitiesToResources(menuItems);
         }
+
+        MenuState.MenuItems = menuItems;
+        _stateInitialized = true;
     }
 
-    private Task OnSelectedItem(MenuItem menuItem)
+    private Task OnSelectedItem(MenuItemModel menuItemModel)
     {
-        _renderedContent = menuItem.RenderContent();
-        StateHasChanged();
+        if (menuItemModel.Content != null)
+        {
+            _renderedContent = menuItemModel.Content;
+        }
+        else
+        {
+            _renderedContent = menuItemModel.RenderContent();
+            StateHasChanged();
+        }
 
         return Task.CompletedTask;
     }

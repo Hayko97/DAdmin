@@ -4,8 +4,8 @@ namespace DAdmin.Components.Services;
 
 public interface IMenuService
 {
-    Task<Dictionary<MenuType, MenuItem>> AddDefaultMenuItems(Dictionary<MenuType, MenuItem> menuItems);
-    Task<Dictionary<MenuType, MenuItem>> AddEntitiesToResources(Dictionary<MenuType, MenuItem> menuItems);
+    Task<Dictionary<MenuSection, MenuItemModel>> AddDefaultMenuItems(Dictionary<MenuSection, MenuItemModel> menuItems);
+    Task<Dictionary<MenuSection, MenuItemModel>> AddEntitiesToResources(Dictionary<MenuSection, MenuItemModel> menuItems);
 
-    Dictionary<MenuType, MenuItem> GetRootMenuItems();
+    Dictionary<MenuSection, MenuItemModel> GetRootMenuItems();
 }

@@ -45,7 +45,7 @@ public class EditObjectStrategy<TEntity> : IEntityDialogStrategy where TEntity :
         }
     }
 
-    public Task<IEnumerable<ResourceProperty>> GetProperties()
+    public Task<IEnumerable<DataProperty>> GetProperties()
     {
         if (_dialog.CurrentChildResource == null)
         {
