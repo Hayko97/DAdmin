@@ -12,12 +12,12 @@ public class DataMapperService<TEntity> : DbService, IDataMapperService<TEntity>
     {
     }
 
-    public async Task<TableResource<TEntity>> MapToTableResource(TEntity entity)
+    public async Task<DataResource<TEntity>> MapToTableResource(TEntity entity)
     {
         return await GetEntityViewModelInternal(entity);
     }
 
-    public async Task<TableResource<object>> MapToTableResource(object entity)
+    public async Task<DataResource<object>> MapToTableResource(object entity)
     {
         if (entity == null) throw new ArgumentNullException(nameof(entity));
 
@@ -33,14 +33,14 @@ public class DataMapperService<TEntity> : DbService, IDataMapperService<TEntity>
     }
 
 
-    private Task<TableResource<T>> GetEntityViewModelInternal<T>(T entity)
+    private Task<DataResource<T>> GetEntityViewModelInternal<T>(T entity)
     {
         if (entity == null)
             throw new ArgumentNullException(nameof(entity));
 
         var properties = entity.GetType().GetProperties();
 
-        var model = new TableResource<T>
+        var model = new DataResource<T>
         {
             Name = entity.GetType().Name,
             EntityModel = entity,
@@ -78,7 +78,7 @@ public class DataMapperService<TEntity> : DbService, IDataMapperService<TEntity>
 
         var entityProperty = new ResourceProperty
         {
-            TablePropertyInfo = prop,
+            EntityPropertyInfo = prop,
             Name = prop.Name,
             IsKey = DbContext.IsKey(entity.GetType(), prop),
             Value = prop.GetValue(entity),

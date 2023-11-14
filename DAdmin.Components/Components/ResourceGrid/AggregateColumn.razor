@@ -1,0 +1,4 @@
+@typeparam TEntity
+
+
+<DataGridAggregate TItem="TEntity" Field="@(AggregationSelector.Compile().ToString())" DisplayFormat=@DisplayFormat DisplayFormatProvider=@DisplayFormatProvider Aggregate="AggregateType"/>

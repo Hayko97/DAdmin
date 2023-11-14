@@ -12,7 +12,7 @@ public static class DataGenerationExtension
         var faker = new Bogus.Faker();
         foreach (var tableProperty in properties)
         {
-            Type propType = tableProperty.TablePropertyInfo.PropertyType;
+            Type propType = tableProperty.EntityPropertyInfo.PropertyType;
 
             if (propType == typeof(string))
             {

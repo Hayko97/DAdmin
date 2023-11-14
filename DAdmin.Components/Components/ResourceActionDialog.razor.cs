@@ -12,34 +12,40 @@ using Microsoft.JSInterop;
 
 namespace DAdmin.Components.Components
 {
-    public partial class EntityActionDialog<TEntity> where TEntity : class
+    public partial class ResourceActionDialog<TEntity> where TEntity : class
     {
+        #region Parameters
         [Parameter] public bool IsOpen { get; set; }
         [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
         [Parameter] public string EntityName { get; set; }
         [Parameter] public DialogMode DialogMode { get; set; }
-
         [Parameter] public TEntity? SelectedEntity { get; set; }
         [Parameter] public EventCallback<TEntity> OnSave { get; set; }
         [Parameter] public EventCallback OnCloseModal { get; set; }
+        #endregion
+
+        #region Dependency Injection
         [Inject] public IDataService<TEntity> DataService { get; set; }
         [Inject] public IDataMapperService<TEntity> DataMapperService { get; set; }
         [Inject] public IDbInfoService DbInfoService { get; set; }
         [Inject] public IJSRuntime JSRuntime { get; set; }
+        #endregion
 
-        public TableResource<TEntity>? RootTableResource { get; set; }
-        public TableResource<object>? ObjectTableResource { get; set; }
-
+        #region Private Fields
         private IEnumerable<ResourceProperty> _properties;
-
         private IEntityDialogStrategy _entityDialogStrategy;
+        private Dictionary<string, string> _entityNames = new();
+        #endregion
+
+        #region Public Properties
+        public DAdmin.Shared.DTO.DataResource<TEntity>? RootEntityResource { get; set; }
+        public DAdmin.Shared.DTO.DataResource<object>? CurrentChildResource { get; set; }
         public Dictionary<string, object> InputValues { get; set; } = new();
         public Dictionary<string, string> InputStringValues { get; set; } = new();
+        public Stack<DAdmin.Shared.DTO.DataResource<object>> ChildDataResourcesStack { get; set; } = new();
+        #endregion
 
-        private Dictionary<string, string> _entityNames = new();
-
-        public Stack<TableResource<object>> TableResourcesStack { get; set; } = new();
-
+        #region Lifecycle Methods
         protected override async Task OnInitializedAsync()
         {
             await LoadTableNames();
@@ -49,22 +55,24 @@ namespace DAdmin.Components.Components
         {
             await InitializeStrategy();
         }
+        #endregion
 
+        #region Strategy Initialization and Handling
         public async Task InitializeStrategy()
         {
-            if (ObjectTableResource?.Properties == null && DialogMode == DialogMode.Create)
+            if (CurrentChildResource?.Properties == null && DialogMode == DialogMode.Create)
             {
                 _entityDialogStrategy = new CreateRootStrategy<TEntity>(this);
             }
-            else if (ObjectTableResource?.Properties != null && DialogMode == DialogMode.Create)
+            else if (CurrentChildResource?.Properties != null && DialogMode == DialogMode.Create)
             {
                 _entityDialogStrategy = new CreateObjectStrategy<TEntity>(this);
             }
-            else if (ObjectTableResource?.Properties == null && DialogMode == DialogMode.Edit)
+            else if (CurrentChildResource?.Properties == null && DialogMode == DialogMode.Edit)
             {
                 _entityDialogStrategy = new EditRootStrategy<TEntity>(this, SelectedEntity);
             }
-            else if (ObjectTableResource?.Properties != null && DialogMode == DialogMode.Edit)
+            else if (CurrentChildResource?.Properties != null && DialogMode == DialogMode.Edit)
             {
                 _entityDialogStrategy = new EditRootStrategy<TEntity>(this, SelectedEntity);
             }
@@ -89,7 +97,9 @@ namespace DAdmin.Components.Components
                 InputStringValues.TryAdd(prop.Name, prop.IsDefaultValue ? string.Empty : prop.Value?.ToString());
             }
         }
+        #endregion
 
+        #region Action Handlers
         private async Task Save()
         {
             try
@@ -128,15 +138,15 @@ namespace DAdmin.Components.Components
 
         private async Task GoBack()
         {
-            if (ObjectTableResource != null && !TableResourcesStack.Any())
+            if (CurrentChildResource != null && !ChildDataResourcesStack.Any())
             {
-                ObjectTableResource = null;
-                EntityName = RootTableResource.Name;
+                CurrentChildResource = null;
+                EntityName = RootEntityResource.Name;
             }
             else
             {
-                ObjectTableResource = TableResourcesStack.Pop();
-                EntityName = ObjectTableResource.Name;
+                CurrentChildResource = ChildDataResourcesStack.Pop();
+                EntityName = CurrentChildResource.Name;
             }
 
             await OnParametersSetAsync();
@@ -145,16 +155,16 @@ namespace DAdmin.Components.Components
 
         private async Task CreateRelationEntity(ResourceProperty propertyInfo)
         {
-            EntityName = propertyInfo.TablePropertyInfo.PropertyType.Name; //Type of Model class type
+            EntityName = propertyInfo.EntityPropertyInfo.PropertyType.Name; //Type of Model class type
 
             await _entityDialogStrategy.MapStringValuesToEntity();
-            if (ObjectTableResource != null)
+            if (CurrentChildResource != null)
             {
-                TableResourcesStack.Push(ObjectTableResource);
+                ChildDataResourcesStack.Push(CurrentChildResource);
             }
 
-            var entity = Activator.CreateInstance(propertyInfo.TablePropertyInfo.PropertyType);
-            ObjectTableResource = await DataMapperService.MapToTableResource(entity);
+            var entity = Activator.CreateInstance(propertyInfo.EntityPropertyInfo.PropertyType);
+            CurrentChildResource = await DataMapperService.MapToTableResource(entity);
 
             await OnParametersSetAsync();
             StateHasChanged();
@@ -189,9 +199,9 @@ namespace DAdmin.Components.Components
         {
             //TODO improve architecture
             await _entityDialogStrategy.MapStringValuesToEntity();
-            if (ObjectTableResource != null)
+            if (CurrentChildResource != null)
             {
-                TableResourcesStack.Push(ObjectTableResource);
+                ChildDataResourcesStack.Push(CurrentChildResource);
             }
 
             EntityName = entityName;
@@ -200,7 +210,7 @@ namespace DAdmin.Components.Components
                     .GetEntityType(
                         entityName); //TODO optimize, save in dictionary the entityName and type ` memotization
             var entity = Activator.CreateInstance(entityType);
-            ObjectTableResource = await DataMapperService.MapToTableResource(entity);
+            CurrentChildResource = await DataMapperService.MapToTableResource(entity);
 
             await OnParametersSetAsync();
 
@@ -214,5 +224,6 @@ namespace DAdmin.Components.Components
 
             return Task.CompletedTask;
         }
+        #endregion
     }
 }

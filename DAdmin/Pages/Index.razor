@@ -3,7 +3,11 @@
 @using DAdmin.Components.Components.Charts.ViewModels
 @using DAdmin.Components.Components.Charts.Enums
 
-<AdminPanel />
+<AdminPanel UseEntitiesAsResource="true">
+    <DataResource TEntity="LegalEntity" ResourceName="LegalEntityTest">
+        <AggregateColumn TEntity="LegalEntity" AggregationSelector="x => x.Zip" AggregateFunction=""/>
+    </DataResource>
+</AdminPanel>
 
 @code{
 

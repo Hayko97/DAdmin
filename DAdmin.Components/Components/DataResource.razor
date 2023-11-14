@@ -35,6 +35,9 @@
                       Responsive
                       Filterable
                       FilterMethod="DataGridFilterMethod.StartsWith">
+                <DataGridAggregate>
+                    @AggregateColumns
+                </DataGridAggregate>
                 <DataGridMultiSelectColumn TItem="TEntity" Width="30px"></DataGridMultiSelectColumn>
                 @foreach (var prop in _data.FirstOrDefault().GetPropertiesWithoutRelations().Take(10))
                 {
@@ -53,7 +56,7 @@
 
     if (_selectedRow != null)
     {
-        <EntityActionDialog TEntity="TEntity" EntityName="@_entityName" SelectedEntity="_selectedRow" DialogMode="DialogMode.Edit" @bind-IsOpen="_isEditModalOpen" OnSave="OnEditModalSave"/>
+        <ResourceActionDialog TEntity="TEntity" EntityName="@_entityName" SelectedEntity="_selectedRow" DialogMode="DialogMode.Edit" @bind-IsOpen="_isEditModalOpen" OnSave="OnEditModalSave"/>
     }
 }
 else
@@ -61,4 +64,4 @@ else
     <h4 class="text-center mt-5 text-black-50">No Data</h4>
 }
 
-<EntityActionDialog TEntity="TEntity" @bind-IsOpen="_isCreateModalOpen" DialogMode="DialogMode.Create" EntityName="@_entityName" OnSave="OnCreateModalSave"/>
+<ResourceActionDialog TEntity="TEntity" @bind-IsOpen="_isCreateModalOpen" DialogMode="DialogMode.Create" EntityName="@_entityName" OnSave="OnCreateModalSave"/>

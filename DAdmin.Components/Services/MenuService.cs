@@ -14,10 +14,16 @@ public class MenuService : IMenuService
         _dbInfoService = dbInfoService;
     }
 
-    public Task<Dictionary<MenuType, MenuItem>> GetDefaultMenu()
+    public async Task<Dictionary<MenuType, MenuItem>> AddDefaultMenuItems(Dictionary<MenuType, MenuItem> menuItems)
     {
-        var menuItems = GetRootMenuItems();
+        menuItems = await AddEntitiesToResources(menuItems);
 
+        //TODO implement for other root menu items
+        return menuItems;
+    }
+
+    public Task<Dictionary<MenuType, MenuItem>> AddEntitiesToResources(Dictionary<MenuType, MenuItem> menuItems)
+    {
         var entityNames = _dbInfoService.GetEntityTypes();
         foreach (var item in entityNames)
         {
@@ -25,7 +31,7 @@ public class MenuService : IMenuService
             {
                 Name = item.ClrType.Name,
                 Type = MenuType.Resources,
-                ComponentType = typeof(TableData<>).MakeGenericType(item.ClrType),
+                ComponentType = typeof(DataResource<>).MakeGenericType(item.ClrType),
                 Parameters = new Dictionary<string, object>()
                 {
                     { "ResourceName", item.ClrType.Name },

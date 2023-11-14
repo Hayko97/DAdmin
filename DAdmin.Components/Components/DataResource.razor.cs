@@ -13,7 +13,7 @@ using Microsoft.JSInterop;
 
 namespace DAdmin.Components.Components
 {
-    public partial class TableData<TEntity> where TEntity : class
+    public partial class DataResource<TEntity> where TEntity : class
     {
         #region Fields and Properties
 
@@ -23,7 +23,7 @@ namespace DAdmin.Components.Components
         private string _entityName;
 
 
-        private List<TableResource<TEntity>> _data = new();
+        private List<DAdmin.Shared.DTO.DataResource<TEntity>> _data = new();
         private List<TEntity> _dataBlazorise = new();
 
         private List<TEntity> _selectedRecords = new();
@@ -35,11 +35,11 @@ namespace DAdmin.Components.Components
 
         [Parameter] public string ResourceName { get; set; }
         [Parameter] public Func<IQueryable<TEntity>, IQueryable<TEntity>> QueryLogic { get; set; }
+        [Parameter] public RenderFragment AggregateColumns { get; set; }
 
         [CascadingParameter] public AdminPanel? AdminPanel { get; set; }
 
         [Inject] private IJSRuntime JSRuntime { get; set; }
-        
         [Inject] private MenuState MenuState { get; set; }
         [Inject] private IDataService<TEntity> DataService { get; set; }
 
@@ -52,7 +52,7 @@ namespace DAdmin.Components.Components
             if (AdminPanel != null)
             {
                 var parameters = ClassHelper.ExtractParameters(this);
-                
+
                 await MenuState.AddMenuItemAsync(new MenuItem
                 {
                     Type = MenuType.Resources,
@@ -128,20 +128,19 @@ namespace DAdmin.Components.Components
                 {
                     foreach (var item in _selectedRecords)
                     {
-                        await DataService.DeleteAsync(ResourceName, item);
+                        await DataService.DeleteAsync(_entityName, item);
                     }
 
                     await OnReadData(_dataGridReadDataEventArgs); // Refresh data after deletion
                 }
                 catch (DbUpdateException ex)
                 {
-                    await JSRuntime.InvokeVoidAsync("alert",
-                        ex.Message);
+                    await JSRuntime.InvokeVoidAsync("alert", ex.Message);
                 }
             }
         }
 
-        private string ConvertToCsv(IEnumerable<TableResource<TEntity>> data)
+        private string ConvertToCsv(IEnumerable<DAdmin.Shared.DTO.DataResource<TEntity>> data)
         {
             var csvBuilder = new StringBuilder();
             var properties = data.FirstOrDefault().GetPropertiesWithoutRelations();

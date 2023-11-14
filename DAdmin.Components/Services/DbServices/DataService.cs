@@ -44,13 +44,13 @@ public class DataService<TEntity> : DbService, IDataService<TEntity> where TEnti
         var data = await query.Skip(skipAmount).Take(PageSize).ToListAsync();
 
         var tableEntities = data.Select(item =>
-            new TableResource<TEntity>
+            new DataResource<TEntity>
             {
                 EntityModel = item,
                 Properties = item.GetType().GetProperties().Select(prop =>
                     new ResourceProperty
                     {
-                        TablePropertyInfo = prop,
+                        EntityPropertyInfo = prop,
                         Name = prop.Name,
                         Value = prop.GetValue(item),
                         IsNavigationProperty = DbContext.IsNavigationProperty(item.GetType(), prop),
@@ -163,13 +163,13 @@ public class DataService<TEntity> : DbService, IDataService<TEntity> where TEnti
         var data = await query.Skip(skipAmount).Take(PageSize).ToListAsync();
 
         var tableEntities = data.Select(item =>
-            new TableResource<TEntity>
+            new DataResource<TEntity>
             {
                 EntityModel = item,
                 Properties = item.GetType().GetProperties().Select(prop =>
                     new ResourceProperty
                     {
-                        TablePropertyInfo = prop,
+                        EntityPropertyInfo = prop,
                         Name = prop.Name,
                         Value = prop.GetValue(item),
                         IsNavigationProperty = DbContext.IsNavigationProperty(item.GetType(), prop),

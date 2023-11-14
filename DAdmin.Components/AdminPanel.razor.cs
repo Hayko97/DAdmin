@@ -19,15 +19,19 @@ public partial class AdminPanel
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
+    [Parameter] public bool UseEntitiesAsResource { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
+        Dictionary<MenuType, MenuItem> menuItems = MenuService.GetRootMenuItems();
+
         if (ChildContent == null)
         {
-            MenuState.MenuItems = await MenuService.GetDefaultMenu();
+            MenuState.MenuItems = await MenuService.AddDefaultMenuItems(menuItems);
         }
-        else
+        else if (UseEntitiesAsResource)
         {
-            MenuState.MenuItems = MenuService.GetRootMenuItems();
+            MenuState.MenuItems = await MenuService.AddEntitiesToResources(menuItems);
         }
     }
 

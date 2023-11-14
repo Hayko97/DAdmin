@@ -5,10 +5,10 @@ namespace DAdmin.Components.Components.EntityDialog.Strategies;
 
 public class CreateRootStrategy<TEntity> : IEntityDialogStrategy where TEntity : class
 {
-    private readonly EntityActionDialog<TEntity> _dialog;
+    private readonly ResourceActionDialog<TEntity> _dialog;
 
     public CreateRootStrategy(
-        EntityActionDialog<TEntity> dialog
+        ResourceActionDialog<TEntity> dialog
     )
     {
         _dialog = dialog;
@@ -19,11 +19,11 @@ public class CreateRootStrategy<TEntity> : IEntityDialogStrategy where TEntity :
     public async Task Save()
     {
         TEntity newItem = Activator.CreateInstance<TEntity>();
-        foreach (var prop in _dialog.RootTableResource.GetPropertiesWithoutRelations())
+        foreach (var prop in _dialog.RootEntityResource.GetPropertiesWithoutRelations())
         {
             if (_dialog.InputValues.ContainsKey(prop.Name))
             {
-                ClassHelper.SetStringValue(_dialog.InputStringValues[prop.Name], prop.TablePropertyInfo, newItem);
+                ClassHelper.SetStringValue(_dialog.InputStringValues[prop.Name], prop.EntityPropertyInfo, newItem);
             }
         }
 
@@ -34,24 +34,24 @@ public class CreateRootStrategy<TEntity> : IEntityDialogStrategy where TEntity :
 
     public async Task<IEnumerable<ResourceProperty>> GetProperties()
     {
-        if (_dialog.RootTableResource == null ||
-            !_dialog.RootTableResource.Properties.Any(x =>
+        if (_dialog.RootEntityResource == null ||
+            !_dialog.RootEntityResource.Properties.Any(x =>
                 x.IsDefaultValue
             )
            ) // In the case when no any change related rootEntity
         {
             TEntity newEntity = Activator.CreateInstance<TEntity>();
-            _dialog.RootTableResource = await _dialog.DataMapperService.MapToTableResource(newEntity);
+            _dialog.RootEntityResource = await _dialog.DataMapperService.MapToTableResource(newEntity);
         }
 
-        return _dialog.RootTableResource.Properties;
+        return _dialog.RootEntityResource.Properties;
     }
 
     public Task MapStringValuesToEntity()
     {
-        if (_dialog.RootTableResource != null)
+        if (_dialog.RootEntityResource != null)
         {
-            foreach (var prop in _dialog.RootTableResource.GetPropertiesWithoutRelations())
+            foreach (var prop in _dialog.RootEntityResource.GetPropertiesWithoutRelations())
             {
                 if (_dialog.InputValues.ContainsKey(prop.Name))
                 {
