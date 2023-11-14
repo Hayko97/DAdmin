@@ -18,6 +18,19 @@ Install-Package dadmin
 ## Getting Started
 To use these components, first ensure that you have referenced this library in your Blazor application. The library uses Entity Framework (EF) DbContext and its entities to generate data grids and other components dynamically.
 
+#### Program.cs
+```c#
+builder.Services.SetupAdminPanel<YourDbContext>();
+```
+
+#### _imports.razor
+
+```c#
+@using DAdmin.Components.Components
+@using DAdmin.Components.Components.Charts
+@using DAdmin.Components.Components.ResourceGrid
+@using DAdmin.Components.Components.Menus
+```
 ## Components
 
 ### AdminPanel

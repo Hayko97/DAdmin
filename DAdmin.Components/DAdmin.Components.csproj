@@ -4,6 +4,11 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <Version>0.0.1</Version>
+        <Title>DAdmin</Title>
+        <Description>This library provides a suite of Blazor components designed to create powerful and visually appealing admin panels with ease</Description>
+        <Copyright>@Needed LLC</Copyright>
+        <PackageProjectUrl>https://github.com/Hayko97/DAdmin</PackageProjectUrl>
     </PropertyGroup>
 
 
