@@ -6,22 +6,19 @@
 @using Blazorise.DataGrid
 @using Esel.Accounts.DataAccess.Entities.Transaction
 
-<AdminPanel>
-    <MenuItem Name="Transactions" MenuSection="MenuSection.Resources" IconClass="fa fa-table">
-        <DataResource TEntity="Transaction" ResourceName="Transactions" ExcludedProperties="@(new[] { "Status", "Username" })">
-            <AggregateColumn TEntity="Transaction" AggregationSelector="x => x.Amount" Aggregate="DataGridAggregateType.Sum"/>
-        </DataResource>
-    </MenuItem>
-</AdminPanel>
+@* <AdminPanel> *@
+@*     <MenuItem Name="Transactions" MenuSection="MenuSection.Resources" IconClass="fa fa-table"> *@
+@*         <DataResource TEntity="Transaction" ResourceName="Transactions" ExcludedProperties="@(new[] { "Status", "Username" })"> *@
+@*             <Aggregator TEntity="Transaction" AggregationSelector="x => x.Amount" Aggregate="DataGridAggregateType.Sum"/> *@
+@*         </DataResource> *@
+@*     </MenuItem> *@
+@* </AdminPanel> *@
 
 <AdminPanel UseContextEntities="true">
     <MenuItem Name="Transactions" MenuSection="MenuSection.Resources" IconClass="fa fa-table">
         <DataResource TEntity="Transaction" ResourceName="Transactions" ExcludedProperties="@(new[] { "Status", "Username" })">
-            <AggregateColumn TEntity="Transaction" AggregationSelector="x => x.Amount" Aggregate="DataGridAggregateType.Sum"/>
+            <Aggregator TEntity="Transaction" AggregationSelector="x => x.Amount" Aggregate="DataGridAggregateType.Sum"/>
         </DataResource>
-    </MenuItem>
-
-    <MenuItem Name="Transactions" MenuSection="MenuSection.Charts" IconClass="fa fa-table">
         <TimeChart TEntity="Transaction"
                    Name="Transaction Activity"
                    ChartType="ChartType.Line"
@@ -31,10 +28,17 @@
                    TimeInterval="ChartTimeInterval.Monthly"
                    QueryLogic="query => query"/>
     </MenuItem>
+    <MenuItem Name="Legal Entity" MenuSection="MenuSection.Charts" IconClass="fa fa-table">
+        <DataResource TEntity="LegalEntity" ExcludedProperties="@(new[] { "Status", "Username" })">
+            <Aggregates>
+                <Aggregator TEntity="LegalEntity" AggregationSelector="@(x => x.Zip)" Aggregate="DataGridAggregateType.Max" />
+            </Aggregates>
+        </DataResource>
+    </MenuItem>
 </AdminPanel>
 
-@*Default Admin panel*@
-<AdminPanel/>
+@* $1$Default Admin panel#1# *@
+@* <AdminPanel/> *@
 
 @code{
 

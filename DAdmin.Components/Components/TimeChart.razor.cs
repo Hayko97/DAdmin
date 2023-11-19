@@ -15,7 +15,7 @@ public partial class TimeChart<TEntity>
 {
     [Parameter] public ChartType ChartType { get; set; }
     [Parameter] public string Name { get; set; }
-    [Parameter] public Func<IQueryable<TEntity>, IQueryable<TEntity>> QueryLogic { get; set; }
+    [Parameter] public Func<IQueryable<TEntity>, IQueryable<TEntity>>? QueryLogic { get; set; } = null;
     [Parameter] public Expression<Func<TEntity, DateTime>> LabelSelector { get; set; }
     [Parameter] public Expression<Func<TEntity, object>> AggregationSelector { get; set; }
 

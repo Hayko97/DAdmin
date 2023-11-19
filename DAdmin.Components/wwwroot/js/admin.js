@@ -6,6 +6,30 @@ function downloadFile(content, filename, contentType) {
     a.click();
 }
 
+window.quillFunctions = {
+    createQuill: function (elementId) {
+        var editor = document.getElementById(elementId);
+        var quill = new Quill(editor, {
+            theme: 'snow'
+        });
+
+        // Store the Quill instance for later use
+        editor.quillInstance = quill;
+    },
+
+    getQuillContent: function (elementId) {
+        var editor = document.getElementById(elementId);
+        return editor.quillInstance.root.innerHTML;
+    },
+
+    setQuillContent: function (elementId, content) {
+        var editor = document.getElementById(elementId);
+        editor.quillInstance.root.innerHTML = content;
+    }
+};
+
+
+//*********************Charts
 function createMultiTableActivityChart(chartId, dates, datasets) {
     console.log('Dates:', dates);
     console.log('Datasets:', datasets);
@@ -27,7 +51,7 @@ function createMultiTableActivityChart(chartId, dates, datasets) {
         };
     });
     console.log(chartDatasets);
-    
+
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -63,7 +87,6 @@ function createMultiTableActivityChart(chartId, dates, datasets) {
     });
 }
 
-
 function getRandomColor() {
     var letters = '0123456789ABCDEF';
     var color = '#';
@@ -72,7 +95,6 @@ function getRandomColor() {
     }
     return color;
 }
-
 
 let charts = {};
 
@@ -97,6 +119,8 @@ function updateChart(canvasId, chartType, chartData, chartOptions) {
     }
 }
 
+//*****************************************Charts END
+
 function loadScript(url, callback) {
     var script = document.createElement("script");
     script.type = "text/javascript";
@@ -120,4 +144,8 @@ function loadScript(url, callback) {
 
 loadScript("https://cdn.jsdelivr.net/npm/chart.js", function () {
     console.log("jQuery loaded!");
+});
+
+loadScript("https://cdn.quilljs.com/1.3.6/quill.js", function () {
+    console.log("Quill Loaded");
 });
