@@ -22,8 +22,10 @@ namespace DAdmin.Components.Components
         private string _previousResourceName;
         private string _entityName;
 
-        private List<DAdmin.Shared.DTO.DataResource<TEntity>> _data = new();
-        private List<TEntity> _dataBlazorise = new();
+        private List<DAdmin.Shared.DTO.DataResource<TEntity>>? _data = new();
+        private List<TEntity> _dataBlazorise = new(); //TODO Refactor
+        private List<DataProperty>? _columns = new();
+        private bool _isLoaded;
 
         private List<TEntity> _selectedRecords = new();
         private TEntity? _selectedRow;
@@ -33,10 +35,11 @@ namespace DAdmin.Components.Components
         private int TotalCount { get; set; }
 
         [Parameter] public string ResourceName { get; set; }
-        [Parameter] public Func<IQueryable<TEntity>, IQueryable<TEntity>> QueryLogic { get; set; }
+        [Parameter] public Func<IQueryable<TEntity>, IQueryable<TEntity>>? QueryLogic { get; set; }
 
         [Parameter] public string[] ExcludedProperties { get; set; }
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter] public bool UseContextEntities { get; set; } = true;
+        [Parameter] public RenderFragment Aggregates { get; set; }
 
         [Inject] private IJSRuntime JSRuntime { get; set; }
         [Inject] private MenuState MenuState { get; set; }
@@ -46,20 +49,19 @@ namespace DAdmin.Components.Components
 
         #region Lifecycle Methods
 
-        protected override async Task OnParametersSetAsync()
+        protected override async Task OnInitializedAsync()
         {
             try
             {
-                if (!string.IsNullOrEmpty(ResourceName) && DataService != null && ResourceName != _previousResourceName)
-                {
-                    _entityName = typeof(TEntity).Name;
-                    await LoadTableData();
-                    _previousResourceName = ResourceName;
-                }
+                _isLoaded = false;
+                _entityName = typeof(TEntity).Name;
+                await LoadTableData();
+                _columns = GetColumns(_data)?.ToList();
+                _isLoaded = true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in OnParametersSet: {ex.Message}");
+                throw new Exception($"Error - {ex.Message}");
             }
         }
 
@@ -73,6 +75,28 @@ namespace DAdmin.Components.Components
             _data = response.Data;
             TotalCount = response.TotalCount;
             StateHasChanged();
+        }
+
+        private IEnumerable<DataProperty>? GetColumns(List<DAdmin.Shared.DTO.DataResource<TEntity>> resources)
+        {
+            IEnumerable<DataProperty>? columns = null;
+
+            if (_data != null && _data.Any() && UseContextEntities)
+            {
+                columns = _data
+                    .FirstOrDefault()
+                    ?.GetPropertiesWithoutRelations();
+
+                if (ExcludedProperties != null)
+                {
+                    if (columns != null)
+                    {
+                        columns = columns.Where(x => ExcludedProperties.All(c => c != x.Name)).ToList();
+                    }
+                }
+            }
+
+            return columns;
         }
 
         private async Task OnReadData(DataGridReadDataEventArgs<TEntity> e)

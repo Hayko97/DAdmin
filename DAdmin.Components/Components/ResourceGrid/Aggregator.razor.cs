@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace DAdmin.Components.Components.ResourceGrid;
 
-public partial class AggregateColumn<TEntity>
+public partial class Aggregator<TEntity>
 {
     private string _field = string.Empty;
     [Parameter] public DataGridAggregateType Aggregate { get; set; }

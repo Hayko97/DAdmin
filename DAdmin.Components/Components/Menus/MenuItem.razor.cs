@@ -21,7 +21,7 @@ public partial class MenuItem
         {
             await MenuState.AddMenuItemAsync(new MenuItemModel
             {
-                Section = MenuSection.Resources,
+                Section = MenuSection,
                 Name = Name,
                 IconClass = IconClass,
                 Content = ChildContent
