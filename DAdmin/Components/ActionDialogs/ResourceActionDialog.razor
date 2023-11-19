@@ -1,0 +1,97 @@
+@namespace DAdmin;
+
+@using DAdmin.Helpers
+@typeparam TEntity
+
+@inject NavigationManager NavigationManager
+
+@if (IsOpen)
+{
+    <div class="modal show d-block" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen w-100">
+            <div class="modal-content w-100">
+                <div class="modal-header d-flex align-items-center">
+                    <h5 class="modal-title">
+                        Create New Record
+                    </h5>
+
+                    <SearchableSelect Items="_entityNames" Style="width: 20%" TextStyle="font-size: 15px; margin-left: 20px" SelectedValue="@EntityName" SelectedValueChanged="OnSelectedEntityName" Class="ml-4"/>
+
+                    <button type="button" class="btn-close" @onclick="CloseModal">
+                    </button>
+                </div>
+                    <div class="modal-body">
+                        @if (CurrentChildResource != null || ChildDataResourcesStack.Any())
+                        {
+                            <div class="mb-3 text-left">
+                                <button class="btn btn-link" @onclick="GoBack">
+                                    <i class="fa fa-arrow-left" style="font-size:18px"></i>
+                                    <h6>
+                                        @if (ChildDataResourcesStack.Any())
+                                        {
+                                            @ChildDataResourcesStack.Peek().Name
+                                        }
+                                        else
+                                        {
+                                            @RootEntityResource.Name
+                                        }
+                                    </h6>
+                                </button>
+                            </div>
+                        }
+
+                        <div class="mb-3 text-center">
+                            <button class="btn btn-link" @onclick="GenerateTestDataForAllFields">Generate Test Data</button>
+                        </div>
+
+                        <div class="row w-75 m-auto">
+                            @foreach (var prop in _properties)
+                            {
+                                // Exclude Id field
+                                if (prop.Name.Equals("Id", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    continue;
+                                }
+
+                                if (prop.IsForeignKey)
+                                {
+                                    continue;
+                                }
+
+                                @if (prop.IsNavigationProperty)
+                                {
+                                    var foreignKeyProperty = prop.ForeignKeyProperty;
+                                    if (foreignKeyProperty != null)
+                                    {
+                                        <div class="col-md-4 form-group">
+                                            <label>
+                                                @prop.Name
+                                                <button class="btn btn-link" @onclick="() => CreateRelationEntity(prop)">Add</button>
+                                            </label>
+
+
+                                            <SearchableSelect Items="prop.RelatedEntities" SelectedValueChanged="@((selected) => { OnSelectedRelationProperty(selected, foreignKeyProperty.Name); })" SelectedValue="@InputStringValues[foreignKeyProperty.Name]"/>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    var inputType = PropertyHelper.GetInputType(prop.EntityPropertyInfo);
+
+                                    <div class="col-md-4 form-group">
+                                        <label>@prop.Name</label>
+                                        <input class="form-control" type="@inputType" @bind="InputStringValues[prop.Name]"/>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" @onclick="Save">Save</button>
+                        <button type="submit" class="btn btn-secondary" @onclick="CloseModal">Close</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}

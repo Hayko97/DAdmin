@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAdmin.Components", "DAdmin.Components\DAdmin.Components.csproj", "{31560E85-2094-4835-8B6F-8668E61E3D12}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAdmin", "DAdmin\DAdmin.csproj", "{31560E85-2094-4835-8B6F-8668E61E3D12}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Esel.Infrastructure", "..\..\Documents\GitHub\Esel\Esel.Infrastructure\Esel.Infrastructure.csproj", "{F5142544-265D-4E50-BC17-C52B58CF358B}"
 EndProject
