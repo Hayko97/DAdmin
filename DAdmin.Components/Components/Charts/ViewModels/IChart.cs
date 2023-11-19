@@ -1,7 +1,7 @@
-using DAdmin.Components.Components.Charts.Enums;
+using DAdmin.Charts.Enums;
 using Microsoft.AspNetCore.Components;
 
-namespace DAdmin.Components.Components.Charts.ViewModels;
+namespace DAdmin.Charts.ViewModels;
 
 public interface IChart
 {

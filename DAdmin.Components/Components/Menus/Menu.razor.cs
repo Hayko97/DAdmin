@@ -1,10 +1,10 @@
-using DAdmin.Components.Components.Charts.ViewModels;
-using DAdmin.Components.Components.Menus.ViewModels;
+using DAdmin.Charts.ViewModels;
+using DAdmin.Menus.ViewModels;
 using DAdmin.Components.Services.DbServices.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAdmin.Components.Components.Menus;
+namespace DAdmin;
 
 public partial class Menu
 {

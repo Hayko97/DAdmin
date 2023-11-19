@@ -1,7 +1,7 @@
 using System.Reflection;
 using System.Text;
 using Blazorise.DataGrid;
-using DAdmin.Components.Components.Menus.ViewModels;
+using DAdmin.Menus.ViewModels;
 using DAdmin.Components.Helpers;
 using DAdmin.Components.Services.DbServices.Interfaces;
 using DAdmin.Components.States;
@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 
-namespace DAdmin.Components.Components
+namespace DAdmin
 {
     public partial class DataResource<TEntity> where TEntity : class
     {
@@ -22,7 +22,7 @@ namespace DAdmin.Components.Components
         private string _previousResourceName;
         private string _entityName;
 
-        private List<DAdmin.Shared.DTO.DataResource<TEntity>>? _data = new();
+        private List<DAdmin.Shared.DTO.DataResourceDto<TEntity>>? _data = new();
         private List<TEntity> _dataBlazorise = new(); //TODO Refactor
         private List<DataProperty>? _columns = new();
         private bool _isLoaded;
@@ -77,7 +77,7 @@ namespace DAdmin.Components.Components
             StateHasChanged();
         }
 
-        private IEnumerable<DataProperty>? GetColumns(List<DAdmin.Shared.DTO.DataResource<TEntity>> resources)
+        private IEnumerable<DataProperty>? GetColumns(List<DAdmin.Shared.DTO.DataResourceDto<TEntity>> resources)
         {
             IEnumerable<DataProperty>? columns = null;
 
@@ -145,7 +145,7 @@ namespace DAdmin.Components.Components
             }
         }
 
-        private string ConvertToCsv(IEnumerable<DAdmin.Shared.DTO.DataResource<TEntity>> data)
+        private string ConvertToCsv(IEnumerable<DAdmin.Shared.DTO.DataResourceDto<TEntity>> data)
         {
             var csvBuilder = new StringBuilder();
             var properties = data.FirstOrDefault().GetPropertiesWithoutRelations();

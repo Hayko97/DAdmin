@@ -1,4 +1,4 @@
-namespace DAdmin.Components.Components.Charts.ViewModels;
+namespace DAdmin.Charts.ViewModels;
 
 using Enums;
 using System.Linq.Expressions;

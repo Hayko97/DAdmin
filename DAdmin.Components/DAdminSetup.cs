@@ -12,7 +12,7 @@ namespace DAdmin.Components;
 
 public static class DAdminSetup
 {
-    public static void SetupAdminPanel<TContext>(this IServiceCollection services) where TContext : DbContext
+    public static void DAdmin<TContext>(this IServiceCollection services) where TContext : DbContext
     {
         //DB Services
         services.AddTransient<DbService>();

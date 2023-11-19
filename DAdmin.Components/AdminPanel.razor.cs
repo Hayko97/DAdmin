@@ -1,6 +1,6 @@
-using DAdmin.Components.Components;
-using DAdmin.Components.Components.Charts.ViewModels;
-using DAdmin.Components.Components.Menus.ViewModels;
+using DAdmin;
+using DAdmin.Charts.ViewModels;
+using DAdmin.Menus.ViewModels;
 using DAdmin.Components.Extensions;
 using DAdmin.Components.Helpers;
 using DAdmin.Components.Services;
@@ -8,7 +8,7 @@ using DAdmin.Components.States;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 
-namespace DAdmin.Components;
+namespace DAdmin;
 
 //TODO implement for generic contexts
 public partial class AdminPanel

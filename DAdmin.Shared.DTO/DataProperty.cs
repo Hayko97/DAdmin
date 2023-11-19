@@ -11,6 +11,6 @@ public record DataProperty
     public bool IsDefaultValue { get; set; }
     public bool IsForeignKey { get; set; }
     public List<KeyValuePair<string, string>>? RelatedEntities { get; set; } //name, jsonString //TODO refactor
-    public bool IsNavigationProperty { get; set; } // ICollection<DataResource>
+    public bool IsNavigationProperty { get; set; } // ICollection<DataResourceDto>
     public PropertyInfo? ForeignKeyProperty { get; set; } // Associated foreignKey if has relation
 }

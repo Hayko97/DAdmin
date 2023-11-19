@@ -1,8 +1,7 @@
-using DAdmin.Components.Extensions;
 using DAdmin.Components.Helpers;
 using DAdmin.Shared.DTO;
 
-namespace DAdmin.Components.Components.EntityDialog.Strategies;
+namespace DAdmin.ActionDialogs.Strategies;
 
 public class CreateObjectStrategy<TEntity> : IEntityDialogStrategy where TEntity : class
 {

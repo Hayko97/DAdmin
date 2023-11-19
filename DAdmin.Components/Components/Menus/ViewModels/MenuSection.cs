@@ -1,4 +1,4 @@
-namespace DAdmin.Components.Components.Menus.ViewModels;
+namespace DAdmin.Menus.ViewModels;
 
 public enum MenuSection
 {

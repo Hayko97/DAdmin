@@ -1,5 +1,5 @@
 using System.ComponentModel;
-using DAdmin.Components.Components.Menus.ViewModels;
+using DAdmin.Menus.ViewModels;
 
 namespace DAdmin.Components.States;
 

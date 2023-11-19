@@ -1,8 +1,8 @@
-using DAdmin.Components.Components.Menus.ViewModels;
+using DAdmin.Menus.ViewModels;
 using DAdmin.Components.States;
 using Microsoft.AspNetCore.Components;
 
-namespace DAdmin.Components.Components.Menus;
+namespace DAdmin;
 
 public partial class MenuItem
 {

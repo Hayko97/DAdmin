@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 using Blazorise.DataGrid;
 using Microsoft.AspNetCore.Components;
 
-namespace DAdmin.Components.Components.ResourceGrid;
+namespace DAdmin;
 
 public partial class Aggregator<TEntity>
 {

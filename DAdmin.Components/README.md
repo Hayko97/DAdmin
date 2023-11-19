@@ -26,10 +26,7 @@ builder.Services.SetupAdminPanel<YourDbContext>();
 #### _imports.razor
 
 ```c#
-@using DAdmin.Components.Components
-@using DAdmin.Components.Components.Charts
-@using DAdmin.Components.Components.ResourceGrid
-@using DAdmin.Components.Components.Menus
+@using DAdmin
 ```
 ## Components
 

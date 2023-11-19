@@ -1,5 +1,5 @@
-using DAdmin.Components.Components;
-using DAdmin.Components.Components.Menus.ViewModels;
+using DAdmin;
+using DAdmin.Menus.ViewModels;
 using DAdmin.Components.Services.DbServices;
 using DAdmin.Components.Services.DbServices.Interfaces;
 

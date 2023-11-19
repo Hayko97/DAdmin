@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
-using DAdmin.Components.Components.Charts.Enums;
-using DAdmin.Components.Components.Charts.ViewModels;
-using DAdmin.Components.Components.Menus.ViewModels;
+using DAdmin.Charts.Enums;
+using DAdmin.Charts.ViewModels;
+using DAdmin.Menus.ViewModels;
 using DAdmin.Components.Helpers;
 using DAdmin.Components.Services.DbServices.Interfaces;
 using DAdmin.Components.States;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 
-namespace DAdmin.Components.Components;
+namespace DAdmin;
 
 public partial class TimeChart<TEntity>
 {

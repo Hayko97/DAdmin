@@ -1,6 +1,6 @@
 using DAdmin.Shared.DTO;
 
-namespace DAdmin.Components.Components.EntityDialog.Strategies;
+namespace DAdmin.ActionDialogs.Strategies;
 
 public interface IEntityDialogStrategy
 {

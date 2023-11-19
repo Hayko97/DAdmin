@@ -1,4 +1,4 @@
-namespace DAdmin.Components.Components.Charts.Enums;
+namespace DAdmin.Charts.Enums;
 
 public enum ChartType
 {

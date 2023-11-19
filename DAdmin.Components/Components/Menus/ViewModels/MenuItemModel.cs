@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components;
 
-namespace DAdmin.Components.Components.Menus.ViewModels;
+namespace DAdmin.Menus.ViewModels;
 
 public class MenuItemModel
 {

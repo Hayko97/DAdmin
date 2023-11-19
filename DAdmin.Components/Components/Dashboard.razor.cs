@@ -1,11 +1,11 @@
 using DAdmin.Components.Builders;
-using DAdmin.Components.Components.Charts.ViewModels;
+using DAdmin.Charts.ViewModels;
 using DAdmin.Components.Services.DbServices.Interfaces;
 using DAdmin.Shared.DTO.Stats;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
-namespace DAdmin.Components.Components;
+namespace DAdmin;
 
 public partial class Dashboard
 {

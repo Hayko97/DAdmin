@@ -1,6 +1,6 @@
 namespace DAdmin.Shared.DTO;
 
-public record DataResource<TEntity>
+public record DataResourceDto<TEntity>
 {
     public TEntity EntityModel { get; set; }
     public string Name { get; set; }

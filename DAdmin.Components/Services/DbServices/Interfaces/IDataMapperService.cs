@@ -4,7 +4,7 @@ namespace DAdmin.Components.Services.DbServices.Interfaces;
 
 public interface IDataMapperService<TEntity> where TEntity : class
 {
-    Task<DataResource<TEntity>> MapToTableResource(TEntity entity);
+    Task<DataResourceDto<TEntity>> MapToTableResource(TEntity entity);
 
-    Task<DataResource<object>> MapToTableResource(object entity);
+    Task<DataResourceDto<object>> MapToTableResource(object entity);
 }
