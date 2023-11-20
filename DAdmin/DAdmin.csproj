@@ -3,7 +3,7 @@
     <PropertyGroup>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Version>0.1.1</Version>
+        <Version>0.1.2</Version>
         <Title>DAdmin</Title>
         <Description>This library provides a suite of Blazor components designed to create powerful and visually appealing admin panels with ease</Description>
         <Copyright>@Needed LLC</Copyright>
