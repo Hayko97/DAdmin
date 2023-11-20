@@ -4,11 +4,11 @@
 This library provides a suite of Blazor components designed to create powerful and visually appealing admin panels with ease. It leverages EF DbContext and its entities to automate much of the admin panel creation. Key components include `AdminPanel`, `MenuItem`, `DataResource`, `Aggregator`, and `TimeChart`.
 
 ## Getting Started
-To use these components, first ensure that you have referenced this library in your Blazor application. The library uses Entity Framework (EF) DbContext and its entities to generate data grids and other components dynamically.
+To use these components, first ensure that you have referenced this library in your Blazor Server application. The library uses Entity Framework (EF) DbContext and its entities to generate data grids and other components dynamically.
 
 #### Program.cs
 ```c#
-builder.Services.SetupAdminPanel<YourDbContext>();
+builder.Services.DAdmin<YourDbContext>();
 ```
 
 #### _imports.razor
@@ -22,19 +22,19 @@ builder.Services.SetupAdminPanel<YourDbContext>();
 The `AdminPanel` component is the container for your administrative interface. It can automatically use DbContext entities to create a data grid for all DbContext entities when `UseContextEntities` is set to `true`.
 
 #### Usage
-- Basic Usage: `<AdminPanel/>` creates a default admin panel without automatic DbContext integration.
+- Basic Usage: `<AdminPanel/>` creates a default admin panel using integrated EF DbContext.
 - Advanced Usage: Set `UseContextEntities="true"` to enable automatic generation of data grids for each entity in your DbContext.
 
 ```html
 <AdminPanel UseContextEntities="true">
-    <MenuItem Name="Transactions" MenuSection="MenuSection.Resources" IconClass="fa fa-table">
-        <DataResource TEntity="Transaction" ResourceName="Transactions" ExcludedProperties="@(new[] { "Status", "Username" })">
-            <Aggregators>
-                <Aggregator TEntity="Transaction" AggregationSelector="x => x.Amount" Aggregate="DataGridAggregateType.Sum"/>
-            </Aggregators>
+    <MenuItem Name="Transactions" MenuSection="MenuSection.Resources">
+        <DataResource TEntity="Transaction" ExcludedProperties="@(new[] { "Status", "Username" })">
+        <Aggregators>
+            <Aggregator TEntity="Transaction" AggregationSelector="x => x.Amount" Aggregate="DataGridAggregateType.Sum"/>
+        </Aggregators>
         </DataResource>
     </MenuItem>
-    <MenuItem Name="Transactions" MenuSection="MenuSection.Charts" IconClass="fa fa-table">
+    <MenuItem Name="Transactions Charts" MenuSection="MenuSection.Charts">
         <TimeChart TEntity="Transaction"
                    Name="Transaction Activity"
                    ChartType="ChartType.Line"
@@ -62,7 +62,7 @@ DataResource connects a data entity to a menu item, allowing for data-driven com
 #### Usage
 ```html
 <DataResource TEntity="Transaction" ResourceName="Transactions" ExcludedProperties="@(new[] { "Status", "Username" })">
-    <!-- Aggregate column or other elements -->
+<!-- Aggregate column or other elements -->
 </DataResource>
 ```
 ### Aggregator
