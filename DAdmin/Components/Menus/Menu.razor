@@ -1,4 +1,5 @@
-@namespace DAdmin;
+@namespace DAdmin
+@inherits DAdminComponent
 
 <nav class="sidebar sidebar-offcanvas">
     <ul class="nav">
@@ -17,7 +18,7 @@
 
                             @foreach (var subItem in menuItem.SubItems)
                             {
-                                var isSelected = subItem.Name == _selectedItemModel.Name;
+                                var isSelected = subItem.Equals(_selectedItemModel);
                                 <li class="nav-item @(isSelected ? "active" : "")">
                                     <a href="#" class="nav-link"
                                        @onclick="() => SelectItem(subItem)">

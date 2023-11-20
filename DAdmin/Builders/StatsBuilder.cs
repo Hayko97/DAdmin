@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DAdmin.Shared.DTO.Stats;
+using DAdmin.Dto.Stats;
 
 namespace DAdmin.Builders
 {

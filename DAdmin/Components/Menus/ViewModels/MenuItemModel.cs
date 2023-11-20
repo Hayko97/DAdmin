@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace DAdmin.Menus.ViewModels;
 
-public class MenuItemModel
+public record MenuItemModel
 {
     public string Name { get; set; }
     public string IconClass { get; set; }

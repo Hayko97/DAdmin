@@ -1,19 +1,7 @@
 # DAdmin Component Library
 
 ## Introduction
-This library provides a suite of Blazor components designed to create powerful and visually appealing admin panels with ease. It leverages EF DbContext and its entities to automate much of the admin panel creation. Key components include `AdminPanel`, `MenuItem`, `DataResource`, `AggregateColumn`, and `TimeChart`.
-
-## Installation
-
-### .NET CLI
-To install the package using the .NET CLI, use the following command:
-```shell
-dotnet add package dadmin
-```
-### NuGet Package Manager Console
-```shell
-Install-Package dadmin
-```
+This library provides a suite of Blazor components designed to create powerful and visually appealing admin panels with ease. It leverages EF DbContext and its entities to automate much of the admin panel creation. Key components include `AdminPanel`, `MenuItem`, `DataResource`, `Aggregator`, and `TimeChart`.
 
 ## Getting Started
 To use these components, first ensure that you have referenced this library in your Blazor application. The library uses Entity Framework (EF) DbContext and its entities to generate data grids and other components dynamically.
@@ -41,7 +29,9 @@ The `AdminPanel` component is the container for your administrative interface. I
 <AdminPanel UseContextEntities="true">
     <MenuItem Name="Transactions" MenuSection="MenuSection.Resources" IconClass="fa fa-table">
         <DataResource TEntity="Transaction" ResourceName="Transactions" ExcludedProperties="@(new[] { "Status", "Username" })">
-        <AggregateColumn TEntity="Transaction" AggregationSelector="x => x.Amount" Aggregate="DataGridAggregateType.Sum"/>
+            <Aggregators>
+                <Aggregator TEntity="Transaction" AggregationSelector="x => x.Amount" Aggregate="DataGridAggregateType.Sum"/>
+            </Aggregators>
         </DataResource>
     </MenuItem>
     <MenuItem Name="Transactions" MenuSection="MenuSection.Charts" IconClass="fa fa-table">
@@ -75,12 +65,12 @@ DataResource connects a data entity to a menu item, allowing for data-driven com
     <!-- Aggregate column or other elements -->
 </DataResource>
 ```
-### AggregateColumn
-AggregateColumn is used within DataResource for aggregating data like sums or averages.
+### Aggregator
+Aggregator is used within DataResource for aggregating data like sums or averages.
 
 #### Usage
 ``` html
-<AggregateColumn TEntity="Transaction" AggregationSelector="x => x.Amount" Aggregate="DataGridAggregateType.Sum"/>
+<Aggregator TEntity="Transaction" AggregationSelector="x => x.Amount" Aggregate="DataGridAggregateType.Sum"/>
 ```
 
 ### TimeChart

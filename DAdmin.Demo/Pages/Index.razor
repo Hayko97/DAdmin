@@ -1,0 +1,28 @@
+﻿@page "/"
+@using DAdmin.Charts.Enums
+@using DAdmin.Charts.ViewModels
+@using DAdmin.Menus.ViewModels
+@using Esel.Accounts.DataAccess.Entities.Transaction
+@using Blazorise.DataGrid
+
+<AdminPanel/>
+
+<AdminPanel UseContextEntities="true">
+    <MenuItem Name="Transactions" MenuSection="MenuSection.Resources" IconClass="fa fa-table">
+        <DataResource TEntity="Transaction" ResourceName="Transactions" ExcludedProperties="@(new[] { "Status", "Username" })">
+            <Aggregators>
+                <Aggregator TEntity="Transaction" AggregationSelector="x => x.Amount" Aggregate="DataGridAggregateType.Sum"/>
+            </Aggregators>
+        </DataResource>
+    </MenuItem>
+    <MenuItem Name="Transactions" MenuSection="MenuSection.Charts" IconClass="fa fa-table">
+        <TimeChart TEntity="Transaction"
+                   Name="Transaction Activity"
+                   ChartType="ChartType.Line"
+                   AggregationType="AggregationType.Count"
+                   AggregationSelector="entity => entity.Id"
+                   LabelSelector="entity => entity.CreatedAt"
+                   TimeInterval="ChartTimeInterval.Monthly"
+                   QueryLogic="query => query"/>
+    </MenuItem>
+</AdminPanel>

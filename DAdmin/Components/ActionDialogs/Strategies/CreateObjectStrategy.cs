@@ -1,9 +1,9 @@
+using DAdmin.Dto;
 using DAdmin.Helpers;
-using DAdmin.Shared.DTO;
 
 namespace DAdmin.ActionDialogs.Strategies;
 
-public class CreateObjectStrategy<TEntity> : IEntityDialogStrategy where TEntity : class
+public class CreateObjectStrategy<TEntity> : IResourceDialogStrategy where TEntity : class
 {
     private readonly ResourceActionDialog<TEntity> _dialog;
 

@@ -1,0 +1,33 @@
+@namespace DAdmin
+@inherits DAdminComponent
+
+@using DAdmin.Charts.ViewModels
+@typeparam TEntity where TEntity : class
+
+<div class="position-relative card">
+    <div class="card-body">
+        <div class="d-flex flex-row justify-content-between">
+            <div class="d-flex">
+                <h6>@Name</h6>
+            </div>
+            <div class="d-flex align-items-end w-25">
+                <select @onchange="OnTimeIntervalChanged" class="form-control w-100 chartSelect">
+                    @foreach (var interval in Enum.GetValues(typeof(ChartTimeInterval)))
+                    {
+                        if (interval.Equals(TimeInterval))
+                        {
+                            <option selected value="@interval">@interval</option>
+                        }
+                        else
+                        {
+                            <option value="@interval">@interval</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <canvas id="@canvasId" style="height: 300px"></canvas>
+        </div>
+    </div>
+</div>

@@ -1,10 +1,10 @@
+using DAdmin.Dto;
 using DAdmin.Helpers;
-using DAdmin.Shared.DTO;
 using Microsoft.JSInterop;
 
 namespace DAdmin.ActionDialogs.Strategies;
 
-public class EditRootStrategy<TEntity> : IEntityDialogStrategy where TEntity : class
+public class EditRootStrategy<TEntity> : IResourceDialogStrategy where TEntity : class
 {
     private readonly ResourceActionDialog<TEntity> _dialog;
     private readonly TEntity? _entity;

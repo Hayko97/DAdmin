@@ -1,4 +1,4 @@
-using DAdmin.Shared.DTO;
+using DAdmin.Dto;
 
 namespace DAdmin.Services.DbServices.Interfaces;
 

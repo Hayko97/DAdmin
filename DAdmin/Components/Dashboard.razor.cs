@@ -1,18 +1,17 @@
 using DAdmin.Builders;
 using DAdmin.Charts.ViewModels;
+using DAdmin.Dto.Stats;
 using DAdmin.Services.DbServices.Interfaces;
-using DAdmin.Shared.DTO.Stats;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
 namespace DAdmin;
 
-public partial class Dashboard
+public partial class Dashboard : DAdminComponent
 {
     [Parameter] public IEnumerable<IChart> Charts { get; set; }
 
     [Inject] public IDbInfoService DbInfoService { get; set; }
-    [Inject] private IJSRuntime JSRuntime { get; set; }
 
     private Stats _stats;
     private StatsBuilder _statsBuilder;
@@ -52,7 +51,7 @@ public partial class Dashboard
                 return new { Label = tableName, Data = counts };
             }).ToList();
 
-            await JSRuntime.InvokeVoidAsync("createMultiTableActivityChart", "activityChart", allDates, datasets);
+            await JsInterop.InvokeVoidAsync("createMultiTableActivityChart", "activityChart", allDates, datasets);
         }
     }
 }

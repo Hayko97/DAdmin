@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DAdmin.ActionDialogs;
 using DAdmin.ActionDialogs.Strategies;
+using DAdmin.Components.ActionDialogs.Enums;
+using DAdmin.Dto;
 using DAdmin.Extensions;
 using Microsoft.AspNetCore.Components;
 using DAdmin.Helpers;
 using DAdmin.Services.DbServices.Interfaces;
-using DAdmin.Shared.DTO;
 using Microsoft.JSInterop;
 
 namespace DAdmin;
 
-public partial class ResourceActionDialog<TEntity> where TEntity : class
+public partial class ResourceActionDialog<TEntity> : DAdminComponent where TEntity : class
 {
     #region Parameters
 
@@ -38,18 +39,18 @@ public partial class ResourceActionDialog<TEntity> where TEntity : class
     #region Private Fields
 
     private IEnumerable<DataProperty> _properties;
-    private IEntityDialogStrategy _entityDialogStrategy;
+    private IResourceDialogStrategy _resourceDialogStrategy;
     private Dictionary<string, string> _entityNames = new();
 
     #endregion
 
     #region Public Properties
 
-    public DAdmin.Shared.DTO.DataResourceDto<TEntity>? RootEntityResource { get; set; }
-    public DAdmin.Shared.DTO.DataResourceDto<object>? CurrentChildResource { get; set; }
+    public DataResourceDto<TEntity>? RootEntityResource { get; set; }
+    public DataResourceDto<object>? CurrentChildResource { get; set; }
     public Dictionary<string, object> InputValues { get; set; } = new();
     public Dictionary<string, string> InputStringValues { get; set; } = new();
-    public Stack<DAdmin.Shared.DTO.DataResourceDto<object>> ChildDataResourcesStack { get; set; } = new();
+    public Stack<DataResourceDto<object>> ChildDataResourcesStack { get; set; } = new();
 
     #endregion
 
@@ -73,28 +74,28 @@ public partial class ResourceActionDialog<TEntity> where TEntity : class
     {
         if (CurrentChildResource?.Properties == null && DialogMode == DialogMode.Create)
         {
-            _entityDialogStrategy = new CreateRootStrategy<TEntity>(this);
+            _resourceDialogStrategy = new CreateRootStrategy<TEntity>(this);
         }
         else if (CurrentChildResource?.Properties != null && DialogMode == DialogMode.Create)
         {
-            _entityDialogStrategy = new CreateObjectStrategy<TEntity>(this);
+            _resourceDialogStrategy = new CreateObjectStrategy<TEntity>(this);
         }
         else if (CurrentChildResource?.Properties == null && DialogMode == DialogMode.Edit)
         {
-            _entityDialogStrategy = new EditRootStrategy<TEntity>(this, SelectedEntity);
+            _resourceDialogStrategy = new EditRootStrategy<TEntity>(this, SelectedEntity);
         }
         else if (CurrentChildResource?.Properties != null && DialogMode == DialogMode.Edit)
         {
-            _entityDialogStrategy = new EditRootStrategy<TEntity>(this, SelectedEntity);
+            _resourceDialogStrategy = new EditRootStrategy<TEntity>(this, SelectedEntity);
         }
         else
         {
             throw new ArgumentException("Invalid strategy");
         }
 
-        _properties = await _entityDialogStrategy.GetProperties();
+        _properties = await _resourceDialogStrategy.GetProperties();
         PrepareInputValues();
-        await _entityDialogStrategy.MapStringValuesToEntity();
+        await _resourceDialogStrategy.MapStringValuesToEntity();
     }
 
     private void PrepareInputValues()
@@ -118,8 +119,8 @@ public partial class ResourceActionDialog<TEntity> where TEntity : class
         try
         {
             await Task.Delay(400);
-            await _entityDialogStrategy.Save();
-            EntityName = _entityDialogStrategy.EntityName;
+            await _resourceDialogStrategy.Save();
+            EntityName = _resourceDialogStrategy.EntityName;
         }
         catch (Exception ex)
         {
@@ -170,7 +171,7 @@ public partial class ResourceActionDialog<TEntity> where TEntity : class
     {
         EntityName = propertyInfo.EntityPropertyInfo.PropertyType.Name; //Section of Model class type
 
-        await _entityDialogStrategy.MapStringValuesToEntity();
+        await _resourceDialogStrategy.MapStringValuesToEntity();
         if (CurrentChildResource != null)
         {
             ChildDataResourcesStack.Push(CurrentChildResource);
@@ -211,7 +212,7 @@ public partial class ResourceActionDialog<TEntity> where TEntity : class
     private async Task OnSelectedEntityName(string entityName)
     {
         //TODO improve architecture
-        await _entityDialogStrategy.MapStringValuesToEntity();
+        await _resourceDialogStrategy.MapStringValuesToEntity();
         if (CurrentChildResource != null)
         {
             ChildDataResourcesStack.Push(CurrentChildResource);

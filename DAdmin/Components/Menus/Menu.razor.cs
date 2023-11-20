@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAdmin;
 
-public partial class Menu
+public partial class Menu : DAdminComponent
 {
     private MenuItemModel _selectedItemModel = new();
 

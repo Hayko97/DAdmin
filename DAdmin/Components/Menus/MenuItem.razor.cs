@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace DAdmin;
 
-public partial class MenuItem
+public partial class MenuItem : DAdminComponent
 {
     [Parameter] public string Name { get; set; }
     [Parameter] public string IconClass { get; set; }

@@ -1,0 +1,15 @@
+@namespace DAdmin
+@inherits DAdminComponent
+
+@typeparam TEntity
+
+@if (_field != null)
+{
+    <DataGridAggregate TItem="TEntity" Field="@_field" DisplayFormat=@DisplayFormat DisplayFormatProvider=@DisplayFormatProvider Aggregate="Aggregate" AggregationFunction="AggregationFunction">
+        <DisplayTemplate>
+            <div style="min-width: 100px;">
+                <b>@($"{Aggregate.ToString()} -  {context.Value}")</b>
+            </div>
+        </DisplayTemplate>
+    </DataGridAggregate>
+}

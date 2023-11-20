@@ -18,7 +18,7 @@ public class DbInfoService : DbService, IDbInfoService
 
     public IEnumerable<string> GetEntityNames()
     {
-        return DbContext.Model.GetEntityTypes().Select(x => x.ClrType.Name).ToList();
+        return DbContext.Model.GetEntityTypes().Select(x => x.ClrType.Name).Distinct().ToList();
     }
 
     public StatsBuilder GetStatsBuilder()

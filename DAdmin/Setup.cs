@@ -25,8 +25,9 @@ public static class Setup
 
         //States
         services.AddSingleton<MenuState>();
-
+        
         services.AddScoped(typeof(DbContext), provider => provider.GetRequiredService<TContext>());
+        services.AddScoped<JSInterop>();
 
         services
             .AddBlazorise(options => { options.Immediate = true; })

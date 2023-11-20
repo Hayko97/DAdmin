@@ -2,8 +2,9 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;
   &lt;Assembly Path="/Users/ashugh/RiderProjects/DynamicAdmin/DAdmin/bin/Debug/net6.0/DAdmin.Components.dll" /&gt;
 &lt;/AssemblyExplorer&gt;</s:String>
-	<s:String x:Key="/Default/Environment/Hierarchy/Build/BuildTool/DotNetCliExePath/@EntryValue">/usr/local/Cellar/dotnet@6/6.0.114/libexec/dotnet</s:String>
-	<s:String x:Key="/Default/Environment/Hierarchy/Build/BuildTool/CustomBuildToolPath/@EntryValue">/usr/local/Cellar/dotnet@6/6.0.114/libexec/sdk/6.0.114/MSBuild.dll</s:String>
+	
+	
+	
 	
 	
 	
